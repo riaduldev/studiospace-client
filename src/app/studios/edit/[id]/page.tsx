@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getApiUrl } from "@/lib/api-url";
 import { uploadImageToServer } from "@/lib/uploadHelper";
+import { BrandedLoader } from "@/components/shared/loading-state";
 
 const CATEGORIES = [
   "Photo Studio",
@@ -203,11 +204,7 @@ export default function EditStudioPage({ params }: { params: Promise<{ id: strin
   };
 
   if (loading) {
-    return (
-      <div className="flex h-[calc(100vh-5rem)] items-center justify-center bg-[#09090B]">
-        <Loader2 className="h-8 w-8 animate-spin text-amber-400" />
-      </div>
-    );
+    return <BrandedLoader message="Loading your studio listing..." />;
   }
 
   if (loadFailed) {

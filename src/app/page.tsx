@@ -7,7 +7,6 @@ import {
   MapPin,
   Star,
   Building2,
-  Loader2,
   Search,
   Clock,
   CalendarCheck,
@@ -23,6 +22,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getApiUrl } from "@/lib/api-url";
+import { StudioCardSkeletonGrid } from "@/components/shared/loading-state";
 
 interface Studio {
   _id: string;
@@ -220,9 +220,7 @@ export default function HomePage() {
           </div>
 
           {loading ? (
-            <div className="flex h-64 items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-amber-400" />
-            </div>
+            <StudioCardSkeletonGrid count={3} />
           ) : featuredStudios.length === 0 ? (
             <div className="rounded-2xl border border-white/10 bg-zinc-950 p-12 text-center">
               <Building2 className="mx-auto h-12 w-12 text-zinc-600" />

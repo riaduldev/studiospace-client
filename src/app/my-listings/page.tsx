@@ -2,11 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Building2, Trash2, Edit, Plus, Loader2, MapPin } from "lucide-react";
+import { Building2, Trash2, Edit, Plus, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { getApiUrl } from "@/lib/api-url";
 import { authClient } from "@/lib/auth-client";
+import { BrandedLoader } from "@/components/shared/loading-state";
 
 interface Studio {
   _id: string;
@@ -101,9 +102,10 @@ export default function MyListingsPage() {
         </div>
 
         {isSessionPending || (userEmail && loadedEmail !== userEmail) ? (
-          <div className="flex h-64 items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-amber-400" />
-          </div>
+          <BrandedLoader
+            message="Loading your studio listings..."
+            className="min-h-64 bg-transparent"
+          />
         ) : !userEmail ? (
           <div className="mt-20 text-center">
             <p className="text-lg font-medium text-zinc-300">Log in to manage your studio listings.</p>

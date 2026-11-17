@@ -2,11 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Calendar, MapPin, Loader2, XCircle } from "lucide-react";
+import { Calendar, MapPin, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { getApiUrl } from "@/lib/api-url";
 import { authClient } from "@/lib/auth-client";
+import { BrandedLoader } from "@/components/shared/loading-state";
 
 interface Booking {
   _id: string;
@@ -108,9 +109,10 @@ export default function MyBookingsPage() {
         </div>
 
         {isSessionPending || (userEmail && loadedEmail !== userEmail) ? (
-          <div className="flex h-64 items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-amber-400" />
-          </div>
+          <BrandedLoader
+            message="Loading your bookings..."
+            className="min-h-64 bg-transparent"
+          />
         ) : !userEmail ? (
           <div className="mt-20 text-center">
             <p className="text-lg font-medium text-zinc-300">Log in to view your bookings.</p>

@@ -21,6 +21,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com", // যদি কখনো Unsplash-এর ছবি ব্যবহার করেন
       },
+      {
+        protocol: "https",
+        hostname: "**", 
+      },
     ],
   },
 };

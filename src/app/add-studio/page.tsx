@@ -23,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import { getApiUrl } from "@/lib/api-url";
 import { authClient } from "@/lib/auth-client";
 import { uploadImageToServer } from "@/lib/uploadHelper";
+import { BrandedLoader } from "@/components/shared/loading-state";
 
 const CATEGORIES = [
   "Photo Studio",
@@ -162,11 +163,7 @@ export default function AddStudioPage() {
   };
 
   if (isSessionPending) {
-    return (
-      <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#09090B]">
-        <Loader2 className="h-8 w-8 animate-spin text-amber-400" />
-      </div>
-    );
+    return <BrandedLoader message="Checking your account..." />;
   }
 
   if (!user) {

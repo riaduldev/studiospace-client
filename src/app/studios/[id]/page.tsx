@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getApiUrl } from "@/lib/api-url";
 import { authClient } from "@/lib/auth-client";
+import { BrandedLoader } from "@/components/shared/loading-state";
 import Link from "next/link";
 
 interface Studio {
@@ -129,11 +130,7 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
   };
 
   if (loading) {
-    return (
-      <div className="flex h-[calc(100vh-5rem)] items-center justify-center bg-[#09090B]">
-        <Loader2 className="h-8 w-8 animate-spin text-amber-400" />
-      </div>
-    );
+    return <BrandedLoader message="Loading studio details..." />;
   }
 
   if (!studio) {
