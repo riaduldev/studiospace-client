@@ -48,7 +48,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${jakarta.className} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col">
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <ThemeProvider>
           <Navbar />
           <main>{children}</main>

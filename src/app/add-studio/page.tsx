@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   PlusCircle,
@@ -13,14 +14,15 @@ import {
   Check,
   Loader2,
   Sparkles,
-  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { uploadImageToServer } from "@/lib/uploadHelper"; // Back-end image upload helper
+import { getApiUrl } from "@/lib/api-url";
+import { authClient } from "@/lib/auth-client";
+import { uploadImageToServer } from "@/lib/uploadHelper";
 
 const CATEGORIES = [
   "Photo Studio",
@@ -49,12 +51,8 @@ const AVAILABLE_AMENITIES = [
 
 export default function AddStudioPage() {
   const router = useRouter();
-
-  // Mock Host Info (Replace with your actual Better Auth session user data)
-  const [hostInfo] = useState({
-    name: "Riadul Islam",
-    email: "riadul@studiospace.io",
-  });
+  const { data: session, isPending: isSessionPending } = authClient.useSession();
+  const user = session?.user;
 
   const [formData, setFormData] = useState({
     title: "",
@@ -67,7 +65,6 @@ export default function AddStudioPage() {
   });
 
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
-  const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState("");
   const [imagePreview, setImagePreview] = useState("");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
@@ -92,20 +89,20 @@ export default function AddStudioPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setImageFile(file);
     setImagePreview(URL.createObjectURL(file));
 
     try {
       setIsUploadingImage(true);
       toast.info("Uploading studio image to server...");
 
-      // Calls your Express backend /api/upload -> ImgBB
       const uploadedUrl = await uploadImageToServer(file);
       setImageUrl(uploadedUrl);
       toast.success("Image uploaded successfully!");
     } catch (error) {
       console.error(error);
-      toast.error("Image upload failed. Please try again.");
+      toast.error("Image upload failed. Using fallback placeholder.");
+      // ব্যাকএন্ডে আপলোড ফেইল করলেও যেন ইউজার আটকে না যায়, একটি ডিফল্ট লিংক সেট করে দেওয়া হলো
+      setImageUrl("https://i.ibb.co.com/6X10V18/placeholder-studio.jpg");
     } finally {
       setIsUploadingImage(false);
     }
@@ -114,13 +111,14 @@ export default function AddStudioPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!formData.title || !formData.hourlyRate || !formData.location) {
-      toast.error("Please fill in all required fields.");
+    if (!user) {
+      toast.error("Please log in to publish a studio listing.");
+      router.push("/login");
       return;
     }
 
-    if (!imageUrl) {
-      toast.error("Please upload or provide a valid studio image.");
+    if (!formData.title || !formData.hourlyRate || !formData.location) {
+      toast.error("Please fill in all required fields (Title, Hourly Rate, Location).");
       return;
     }
 
@@ -132,22 +130,24 @@ export default function AddStudioPage() {
         hourlyRate: Number(formData.hourlyRate),
         securityDeposit: Number(formData.securityDeposit || 0),
         maxCapacity: Number(formData.maxCapacity || 1),
-        imageUrl,
+        imageUrl: imageUrl || "https://i.ibb.co.com/6X10V18/placeholder-studio.jpg",
         amenities: selectedAmenities,
-        ownerName: hostInfo.name,
-        ownerEmail: hostInfo.email,
+        ownerName: user.name || user.email,
+        ownerEmail: user.email,
       };
 
-      const res = await fetch("http://localhost:8000/api/studios", {
+      const response = await fetch(getApiUrl("/api/studios"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(studioPayload),
       });
 
-      const data = await res.json();
+      const data = await response.json().catch(() => null);
 
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || "Failed to create studio listing.");
+      if (!response.ok || !data?.success) {
+        throw new Error(
+          data?.message || `Failed to create studio listing (HTTP ${response.status}).`
+        );
       }
 
       toast.success("Studio listed successfully!");
@@ -161,13 +161,36 @@ export default function AddStudioPage() {
     }
   };
 
+  if (isSessionPending) {
+    return (
+      <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[#09090B]">
+        <Loader2 className="h-8 w-8 animate-spin text-amber-400" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex min-h-[calc(100vh-5rem)] flex-col items-center justify-center bg-[#09090B] text-center text-white">
+        <p className="text-lg font-medium text-zinc-300">
+          Log in to publish a studio listing.
+        </p>
+        <Link
+          href="/login"
+          className="mt-4 rounded-xl bg-amber-400 px-5 py-3 font-semibold text-zinc-950 hover:bg-amber-300"
+        >
+          Log in
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-[calc(100vh-5rem)] bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
       {/* Ambient Spotlight Glow */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[760px] -translate-x-1/2 rounded-full bg-amber-500/[0.08] blur-[130px]" />
 
       <div className="relative z-10 mx-auto max-w-4xl rounded-3xl border border-white/[0.1] bg-zinc-950/85 p-6 shadow-[0_24px_70px_rgba(0,0,0,0.85)] backdrop-blur-2xl sm:p-10">
-        {/* Header */}
         <div className="mb-8 border-b border-white/[0.08] pb-6">
           <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-amber-300">
             <Sparkles className="h-3 w-3" />
@@ -178,8 +201,7 @@ export default function AddStudioPage() {
             Add New Creative Studio
           </h1>
           <p className="mt-1 text-sm text-zinc-400">
-            Publish your soundstage, cyclorama loft, or recording suite for
-            creators worldwide.
+            Publish your soundstage, cyclorama loft, or recording suite for creators worldwide.
           </p>
         </div>
 
@@ -317,7 +339,7 @@ export default function AddStudioPage() {
             </div>
           </div>
 
-          {/* Section 3: Image Upload */}
+          {/* Section 3: Image Upload / URL */}
           <div className="space-y-4">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-400">
               3. Studio Image
@@ -325,7 +347,7 @@ export default function AddStudioPage() {
 
             <div className="space-y-3">
               <Label className="text-xs font-medium text-zinc-300">
-                Upload Cover Photo *
+                Upload Cover Photo or Provide Direct Image URL *
               </Label>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                 <div className="relative flex-1">
@@ -340,23 +362,36 @@ export default function AddStudioPage() {
                 </div>
                 {isUploadingImage && (
                   <span className="flex items-center gap-2 text-xs text-amber-400">
-                    <Loader2 className="h-4 w-4 animate-spin" /> Uploading to server...
+                    <Loader2 className="h-4 w-4 animate-spin" /> Uploading...
                   </span>
                 )}
               </div>
 
-              {imagePreview && (
+              {/* সরাসরি ইমেজ লিংক বসানোর অপশন */}
+              <div className="space-y-1 pt-1">
+                <Label htmlFor="imageUrlInput" className="text-[11px] text-zinc-400">
+                  Or paste direct image URL here:
+                </Label>
+                <Input
+                  id="imageUrlInput"
+                  type="url"
+                  placeholder="https://i.ibb.co/... or any image link"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  className="h-10 rounded-xl border-white/10 bg-white/[0.03] text-xs text-white"
+                />
+              </div>
+
+              {(imagePreview || imageUrl) && (
                 <div className="relative mt-2 h-48 w-full overflow-hidden rounded-2xl border border-white/15 bg-zinc-900">
                   <img
-                    src={imagePreview}
+                    src={imagePreview || imageUrl}
                     alt="Studio preview"
                     className="h-full w-full object-cover"
                   />
-                  {imageUrl && (
-                    <span className="absolute bottom-3 right-3 rounded-full bg-emerald-500/95 px-3 py-1 text-xs font-semibold text-zinc-950 shadow-lg">
-                      ✓ Uploaded &amp; Verified
-                    </span>
-                  )}
+                  <span className="absolute bottom-3 right-3 rounded-full bg-emerald-500/95 px-3 py-1 text-xs font-semibold text-zinc-950 shadow-lg">
+                    ✓ Image Ready
+                  </span>
                 </div>
               )}
             </div>
@@ -408,42 +443,22 @@ export default function AddStudioPage() {
               <Label htmlFor="overview" className="text-xs font-medium text-zinc-300">
                 Description &amp; Specifications
               </Label>
-              <div className="relative">
-                <FileText className="pointer-events-none absolute left-3.5 top-3.5 h-4 w-4 text-zinc-500" />
-                <textarea
-                  id="overview"
-                  name="overview"
-                  rows={4}
-                  placeholder="Describe lighting grids, ceiling height, power supply (e.g., 60A Edison), and acoustic isolation..."
-                  value={formData.overview}
-                  onChange={handleChange}
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.03] p-3 pl-10 text-sm text-white placeholder:text-zinc-500 focus:border-amber-400/60 focus:outline-none focus:ring-1 focus:ring-amber-400/20"
-                />
-              </div>
+              <textarea
+                id="overview"
+                name="overview"
+                rows={4}
+                placeholder="Describe lighting grids, ceiling height, power supply, etc..."
+                value={formData.overview}
+                onChange={handleChange}
+                className="w-full rounded-xl border border-white/10 bg-white/[0.03] p-3 text-sm text-white placeholder:text-zinc-500 focus:border-amber-400/60 focus:outline-none"
+              />
             </div>
           </div>
 
-          {/* Section 6: Read-only Host Information */}
-          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4">
-            <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-              Listing Host Information (Read-Only)
-            </p>
-            <div className="mt-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-6 text-sm text-zinc-200">
-              <div>
-                <span className="text-zinc-500">Name:</span>{" "}
-                <strong className="text-white">{hostInfo.name}</strong>
-              </div>
-              <div>
-                <span className="text-zinc-500">Email:</span>{" "}
-                <strong className="text-white">{hostInfo.email}</strong>
-              </div>
-            </div>
-          </div>
-
-          {/* Submit Button */}
+          {/* Submit Button (বাটনটি এখন আর অতিরিক্ত কন্ডিশনে আটকে থাকবে না) */}
           <Button
             type="submit"
-            disabled={isSubmitting || isUploadingImage || !imageUrl}
+            disabled={isSubmitting}
             className="group h-12 w-full rounded-xl bg-gradient-to-b from-amber-300 via-amber-400 to-amber-500 text-sm font-semibold text-zinc-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_4px_22px_rgba(245,158,11,0.32)] transition-all hover:brightness-105 disabled:opacity-50"
           >
             {isSubmitting ? (

@@ -1,21 +1,27 @@
-// lib/uploadHelper.ts
+import { getApiUrl } from "@/lib/api-url";
 
 export async function uploadImageToServer(file: File): Promise<string> {
   const formData = new FormData();
   formData.append("image", file);
 
-  // আপনার Express ব্যাকএন্ডের URL (যেমন: http://localhost:8000/api/upload)
-  const res = await fetch("http://localhost:8000/api/upload", {
+  const response = await fetch(getApiUrl("/api/upload"), {
     method: "POST",
     body: formData, 
-    // খেয়াল রাখবেন: fetch এ FormData পাঠালে 'Content-Type': 'multipart/form-data' হেডার ম্যানুয়ালি দিতে হয় না, ব্রাউজার নিজে থেকেই সেট করে নেয়।
   });
 
-  const data = await res.json();
-
-  if (!data.success) {
-    throw new Error(data.message || "Image upload failed");
+  if (response.status === 404) {
+    throw new Error(
+      "The upload route was not found. Stop the service on port 8000 and start the API from the studiospace-server folder."
+    );
   }
 
-  return data.url; // এটি ব্যাকএন্ড থেকে আসা ImgBB-এর সরাসরি ইমেজ লিংক
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok || !data?.success || typeof data.url !== "string") {
+    throw new Error(
+      data?.message || `Image upload failed (HTTP ${response.status}).`
+    );
+  }
+
+  return data.url;
 }

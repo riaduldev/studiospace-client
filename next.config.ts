@@ -11,6 +11,18 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "i.ibb.co", // ImgBB ডোমেইন অনুমতি দেওয়া হলো
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com", // যদি কখনো Unsplash-এর ছবি ব্যবহার করেন
+      },
+    ],
+  },
 };
 
 export default nextConfig;
