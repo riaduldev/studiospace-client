@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Calendar, MapPin, XCircle, ArrowRight, Search, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { getApiUrl } from "@/lib/api-url";
 import { authClient } from "@/lib/auth-client";
 import { BrandedLoader } from "@/components/shared/loading-state";
@@ -107,7 +107,7 @@ export default function MyBookingsPage() {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
+    <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-5xl">
         <div className="border-b border-white/[0.08] pb-6">
           <h1 className="text-3xl font-bold tracking-tight text-white">My Bookings</h1>
@@ -122,12 +122,14 @@ export default function MyBookingsPage() {
         ) : !userEmail ? (
           <div className="mt-20 text-center">
             <p className="text-lg font-medium text-zinc-300">Log in to view your bookings.</p>
-            <Button
-              render={<Link href="/login" />}
-              className="mt-4 rounded-xl bg-amber-400 font-semibold text-zinc-950"
+            <Link
+              href="/login"
+              className={buttonVariants({
+                className: "mt-4 rounded-xl bg-amber-400 font-semibold text-zinc-950",
+              })}
             >
               Log in
-            </Button>
+            </Link>
           </div>
         ) : bookings.length === 0 ? (
           <div className="mt-20 text-center">
@@ -138,14 +140,17 @@ export default function MyBookingsPage() {
             <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500">
               Find a creative space for your next project and your reservations will show up here.
             </p>
-            <Button
-              render={<Link href="/studios" />}
-              className="mt-5 rounded-xl bg-amber-400 font-semibold text-zinc-950 hover:bg-amber-300"
+            <Link
+              href="/studios"
+              className={buttonVariants({
+                className:
+                  "mt-5 rounded-xl bg-amber-400 font-semibold text-zinc-950 hover:bg-amber-300",
+              })}
             >
               <Search aria-hidden="true" className="mr-2 size-4" />
               Explore studios
               <ArrowRight aria-hidden="true" className="ml-2 size-4" />
-            </Button>
+            </Link>
           </div>
         ) : (
           <div className="mt-8 space-y-4">
@@ -166,12 +171,12 @@ export default function MyBookingsPage() {
                     <span className="text-xs text-zinc-500">ID: {booking._id.slice(-6)}</span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-white">{booking.studioTitle}</h3>
+                  <h3 className="break-words text-lg font-bold text-white">{booking.studioTitle}</h3>
 
-                  <p className="flex items-center gap-1.5 text-xs text-zinc-400">
+                  <p className="flex min-w-0 items-center gap-1.5 break-words text-xs text-zinc-400">
                     <MapPin className="h-3.5 w-3.5 text-zinc-500" /> {booking.studioLocation}
                   </p>
-                  <p className="flex items-center gap-1.5 text-xs text-zinc-400">
+                  <p className="flex min-w-0 items-center gap-1.5 break-words text-xs text-zinc-400">
                     <Calendar className="h-3.5 w-3.5 text-zinc-500" /> Date: {booking.bookingDate}
                   </p>
                 </div>

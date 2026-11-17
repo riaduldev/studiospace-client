@@ -212,7 +212,7 @@ export default function AddStudioPage() {
   }
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
+    <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
       {/* Ambient Spotlight Glow */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[760px] -translate-x-1/2 rounded-full bg-amber-500/[0.08] blur-[130px]" />
 
@@ -482,7 +482,7 @@ export default function AddStudioPage() {
               4. Amenities &amp; Equipment
             </h2>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {AVAILABLE_AMENITIES.map((amenity) => {
                 const selected = selectedAmenities.includes(amenity);
                 return (

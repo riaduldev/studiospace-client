@@ -20,7 +20,7 @@ import {
   Palette,
   Film
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { getApiUrl } from "@/lib/api-url";
 import { StudioCardSkeletonGrid } from "@/components/shared/loading-state";
 
@@ -137,19 +137,25 @@ export default function HomePage() {
                   {slide.subtitle}
                 </p>
                 <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-                  <Button
-                    render={<Link href="/studios" />}
-                    className="h-12 rounded-xl bg-amber-400 px-8 text-sm font-semibold text-zinc-950 hover:bg-amber-300 shadow-[0_0_25px_rgba(245,158,11,0.35)]"
+                  <Link
+                    href="/studios"
+                    className={buttonVariants({
+                      className:
+                        "h-12 rounded-xl bg-amber-400 px-8 text-sm font-semibold text-zinc-950 hover:bg-amber-300 shadow-[0_0_25px_rgba(245,158,11,0.35)]",
+                    })}
                   >
                     Explore Studios <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                  <Button
-                    render={<Link href="/add-studio" />}
-                    variant="outline"
-                    className="h-12 rounded-xl border-white/15 bg-white/[0.03] px-8 text-sm font-semibold text-white hover:bg-white/[0.08] backdrop-blur-md"
+                  </Link>
+                  <Link
+                    href="/add-studio"
+                    className={buttonVariants({
+                      variant: "outline",
+                      className:
+                        "h-12 rounded-xl border-white/15 bg-white/[0.03] px-8 text-sm font-semibold text-white hover:bg-white/[0.08] backdrop-blur-md",
+                    })}
                   >
                     Host Your Space
-                  </Button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -210,13 +216,15 @@ export default function HomePage() {
               <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">Featured Stages</span>
               <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl text-white">Top Rated &amp; Newest Studios</h2>
             </div>
-            <Button
-              render={<Link href="/studios" />}
-              variant="ghost"
-              className="mt-4 md:mt-0 text-amber-400 hover:text-amber-300 hover:bg-transparent"
+            <Link
+              href="/studios"
+              className={buttonVariants({
+                variant: "ghost",
+                className: "mt-4 md:mt-0 text-amber-400 hover:text-amber-300 hover:bg-transparent",
+              })}
             >
               Explore All Studios <ArrowRight className="ml-1.5 h-4 w-4" />
-            </Button>
+            </Link>
           </div>
 
           {loading ? (
@@ -225,12 +233,14 @@ export default function HomePage() {
             <div className="rounded-2xl border border-white/10 bg-zinc-950 p-12 text-center">
               <Building2 className="mx-auto h-12 w-12 text-zinc-600" />
               <p className="mt-4 text-base font-medium text-zinc-300">No studios listed yet.</p>
-              <Button
-                render={<Link href="/add-studio" />}
-                className="mt-4 bg-amber-400 text-zinc-950 font-semibold"
+              <Link
+                href="/add-studio"
+                className={buttonVariants({
+                  className: "mt-4 bg-amber-400 text-zinc-950 font-semibold",
+                })}
               >
                 Publish First Studio
-              </Button>
+              </Link>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -274,12 +284,15 @@ export default function HomePage() {
                         </p>
                       </div>
 
-                      <Button
-                        render={<Link href={`/studios/${studio._id}`} />}
-                        className="rounded-xl bg-white/[0.08] text-xs font-semibold text-white hover:bg-amber-400 hover:text-zinc-950"
+                      <Link
+                        href={`/studios/${studio._id}`}
+                        className={buttonVariants({
+                          className:
+                            "rounded-xl bg-white/[0.08] text-xs font-semibold text-white hover:bg-amber-400 hover:text-zinc-950",
+                        })}
                       >
                         View Details <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                      </Button>
+                      </Link>
                     </div>
                   </div>
                 </div>

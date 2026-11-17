@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Home } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Page Not Found",
@@ -89,14 +89,17 @@ export default function NotFound() {
             We couldn&apos;t find the creative space you were looking for. It may
             have moved, or the link may be out of date.
           </p>
-          <Button
-            render={<Link href="/" />}
-            className="mt-8 h-12 rounded-xl bg-amber-400 px-6 font-semibold text-zinc-950 shadow-lg shadow-amber-950/20 hover:bg-amber-300"
+          <Link
+            href="/"
+            className={buttonVariants({
+              className:
+                "mt-8 h-12 rounded-xl bg-amber-400 px-6 font-semibold text-zinc-950 shadow-lg shadow-amber-950/20 hover:bg-amber-300",
+            })}
           >
             <Home aria-hidden="true" className="mr-2 size-4" />
             Return to Home
             <ArrowRight aria-hidden="true" className="ml-2 size-4" />
-          </Button>
+          </Link>
         </div>
       </div>
     </section>

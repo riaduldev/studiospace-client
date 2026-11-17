@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Search, SearchX, MapPin, Star, Building2, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { getApiUrl } from "@/lib/api-url";
 import { StudioCardSkeletonGrid } from "@/components/shared/loading-state";
 
@@ -102,19 +102,19 @@ function StudiosExplorer() {
   }, [queryString]);
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
+    <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
       {/* Ambient Spotlight */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[380px] w-[700px] -translate-x-1/2 rounded-full bg-amber-500/[0.06] blur-[120px]" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* Header & Search */}
-        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-white">Explore Creative Studios</h1>
             <p className="mt-1 text-sm text-zinc-400">Book professional soundstages, cyclorama lofts, and recording spaces.</p>
           </div>
 
-          <div className="relative w-full md:w-80">
+          <div className="relative w-full lg:w-80">
             <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
             <Input
               type="text"
@@ -171,13 +171,16 @@ function StudiosExplorer() {
                 Clear search and filters
               </Button>
             ) : (
-              <Button
-                render={<Link href="/add-studio" />}
-                className="mt-5 rounded-xl bg-amber-400 font-semibold text-zinc-950 hover:bg-amber-300"
+              <Link
+                href="/add-studio"
+                className={buttonVariants({
+                  className:
+                    "mt-5 rounded-xl bg-amber-400 font-semibold text-zinc-950 hover:bg-amber-300",
+                })}
               >
                 List your studio
                 <ArrowRight className="ml-2 size-4" />
-              </Button>
+              </Link>
             )}
           </div>
         ) : (
@@ -222,12 +225,15 @@ function StudiosExplorer() {
                       </p>
                     </div>
 
-                          <Button
-                            render={<Link href={`/studios/${studio._id}`} />}
-                            className="rounded-xl bg-white/[0.08] text-xs font-semibold text-white hover:bg-amber-400 hover:text-zinc-950"
+                          <Link
+                            href={`/studios/${studio._id}`}
+                            className={buttonVariants({
+                              className:
+                                "rounded-xl bg-white/[0.08] text-xs font-semibold text-white hover:bg-amber-400 hover:text-zinc-950",
+                            })}
                           >
                             View Details <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                          </Button>
+                          </Link>
                   </div>
                 </div>
               </div>

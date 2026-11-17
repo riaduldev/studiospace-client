@@ -130,7 +130,7 @@ export function Footer() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 pb-10 pt-16 sm:px-8">
         {/* Main 12-Column Footer Grid */}
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           {/* Column 1: Brand Identity, Mission & Socials (4 cols) */}
           <div className="space-y-5 lg:col-span-4">
             <StudioApertureLogo />

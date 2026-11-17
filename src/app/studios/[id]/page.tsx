@@ -15,7 +15,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getApiUrl } from "@/lib/api-url";
@@ -160,9 +160,14 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-5rem)] bg-[#09090B] text-white">
         <p className="text-lg font-medium text-zinc-400">Studio not found.</p>
-        <Button render={<Link href="/studios" />} className="mt-4 bg-amber-400 text-zinc-950 font-semibold">
+        <Link
+          href="/studios"
+          className={buttonVariants({
+            className: "mt-4 bg-amber-400 text-zinc-950 font-semibold",
+          })}
+        >
           Back to Explore
-        </Button>
+        </Link>
       </div>
     );
   }
@@ -173,11 +178,17 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
   const currentImage = galleryImages[activeImageIndex % galleryImages.length] || studio.imageUrl;
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] bg-[#09090B] px-4 py-10 sm:px-6 lg:px-8">
+    <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-[#09090B] px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <Button render={<Link href="/studios" />} variant="ghost" className="mb-6 text-zinc-400 hover:text-white">
+        <Link
+          href="/studios"
+          className={buttonVariants({
+            variant: "ghost",
+            className: "mb-6 text-zinc-400 hover:text-white",
+          })}
+        >
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Studios
-        </Button>
+        </Link>
 
         {/* Studio photo gallery */}
         <div className="relative h-72 sm:h-[400px] w-full overflow-hidden rounded-3xl border border-white/10 bg-zinc-900">
@@ -188,8 +199,8 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
               <span className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-amber-300 backdrop-blur-md">
                 {studio.category}
               </span>
-              <h1 className="mt-3 text-2xl font-bold text-white sm:text-4xl">{studio.title}</h1>
-              <p className="mt-1 flex items-center gap-1.5 text-sm text-zinc-300">
+              <h1 className="mt-3 break-words text-2xl font-bold text-white sm:text-4xl">{studio.title}</h1>
+              <p className="mt-1 flex min-w-0 items-center gap-1.5 break-words text-sm text-zinc-300">
                 <MapPin className="h-4 w-4 text-amber-400" /> {studio.location}
               </p>
             </div>
@@ -256,7 +267,7 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
         <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-3">
           {/* Left Details */}
           <div className="lg:col-span-2 space-y-8">
-            <div className="grid grid-cols-3 gap-4 rounded-2xl border border-white/[0.08] bg-zinc-950/60 p-5">
+            <div className="grid grid-cols-1 gap-4 rounded-2xl border border-white/[0.08] bg-zinc-950/60 p-5 sm:grid-cols-3">
               <div>
                 <span className="flex items-center gap-1 text-xs text-zinc-500"><ShieldCheck className="h-3.5 w-3.5 text-amber-400" /> Security Deposit</span>
                 <p className="mt-1 text-base font-bold text-white">${studio.securityDeposit}</p>
@@ -298,11 +309,11 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
             <div className="rounded-2xl border border-white/[0.08] bg-zinc-950/60 p-5">
               <span className="text-xs uppercase tracking-wider text-zinc-500">Hosted By</span>
               <p className="mt-1 text-base font-bold text-white">{studio.ownerName}</p>
-              <p className="text-xs text-zinc-400">{studio.ownerEmail}</p>
+              <p className="break-all text-xs text-zinc-400">{studio.ownerEmail}</p>
             </div>
 
             <section className="space-y-4" aria-labelledby="studio-reviews-heading">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-3">
                 <h2 id="studio-reviews-heading" className="text-lg font-bold text-white">
                   Creator Reviews
                 </h2>
@@ -321,7 +332,7 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
                       className="rounded-2xl border border-white/[0.08] bg-zinc-950/60 p-5"
                     >
                       <div className="flex items-center justify-between gap-4">
-                        <p className="font-semibold text-zinc-200">
+                        <p className="min-w-0 break-words font-semibold text-zinc-200">
                           {review.reviewerName || "StudioSpace creator"}
                         </p>
                         <span className="flex items-center gap-1 text-sm text-amber-400">
@@ -343,7 +354,7 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
 
           {/* Booking call to action */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 rounded-3xl border border-white/10 bg-zinc-950/90 p-6 shadow-2xl backdrop-blur-2xl">
+            <div className="rounded-3xl border border-white/10 bg-zinc-950/90 p-6 shadow-2xl backdrop-blur-2xl lg:sticky lg:top-24">
               <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">
                 Reserve this space
               </span>
@@ -379,7 +390,7 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
       </div>
 
       <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
-        <DialogContent className="max-w-lg border border-white/10 bg-zinc-950 p-6 text-white">
+        <DialogContent className="max-w-[calc(100%-2rem)] border border-white/10 bg-zinc-950 p-6 text-white sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-white">
               Book Workspace Now
@@ -406,15 +417,15 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
               </div>
             </div>
             <div className="space-y-2 rounded-xl border border-white/10 bg-white/[0.02] p-4 text-sm">
-              <div className="flex justify-between text-zinc-400">
-                <span>Four hours at ${studio.hourlyRate}/hr</span>
-                <span>${studio.hourlyRate * 4}</span>
+              <div className="flex justify-between gap-3 text-zinc-400">
+                <span className="min-w-0">Four hours at ${studio.hourlyRate}/hr</span>
+                <span className="shrink-0">${studio.hourlyRate * 4}</span>
               </div>
-              <div className="flex justify-between text-zinc-400">
-                <span>Refundable security deposit</span>
-                <span>${studio.securityDeposit}</span>
+              <div className="flex justify-between gap-3 text-zinc-400">
+                <span className="min-w-0">Refundable security deposit</span>
+                <span className="shrink-0">${studio.securityDeposit}</span>
               </div>
-              <div className="flex justify-between border-t border-white/10 pt-3 font-semibold text-white">
+              <div className="flex justify-between gap-3 border-t border-white/10 pt-3 font-semibold text-white">
                 <span>Estimated total</span>
                 <span className="text-amber-400">
                   ${(studio.hourlyRate * 4) + studio.securityDeposit}

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Building2, Trash2, Edit, Plus, MapPin, Loader2, TriangleAlert } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -105,17 +105,20 @@ export default function MyListingsPage() {
   return (
     <div className="relative min-h-[calc(100vh-5rem)] bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <div className="flex items-center justify-between border-b border-white/[0.08] pb-6">
+        <div className="flex flex-col gap-4 border-b border-white/[0.08] pb-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-white">My Studio Listings</h1>
             <p className="mt-1 text-sm text-zinc-400">Manage, update, or remove your published creative spaces.</p>
           </div>
-          <Button
-            render={<Link href="/add-studio" />}
-            className="rounded-xl bg-amber-400 font-semibold text-zinc-950 hover:bg-amber-300"
+          <Link
+            href="/add-studio"
+            className={buttonVariants({
+              className:
+                "w-full justify-center rounded-xl bg-amber-400 font-semibold text-zinc-950 hover:bg-amber-300 sm:w-auto",
+            })}
           >
             <Plus className="mr-2 h-4 w-4" /> Add New Studio
-          </Button>
+          </Link>
         </div>
 
         {isSessionPending || (userEmail && loadedEmail !== userEmail) ? (
@@ -126,23 +129,27 @@ export default function MyListingsPage() {
         ) : !userEmail ? (
           <div className="mt-20 text-center">
             <p className="text-lg font-medium text-zinc-300">Log in to manage your studio listings.</p>
-            <Button
-              render={<Link href="/login" />}
-              className="mt-4 rounded-xl bg-amber-400 font-semibold text-zinc-950"
+            <Link
+              href="/login"
+              className={buttonVariants({
+                className: "mt-4 rounded-xl bg-amber-400 font-semibold text-zinc-950",
+              })}
             >
               Log in
-            </Button>
+            </Link>
           </div>
         ) : studios.length === 0 ? (
           <div className="mt-20 text-center">
             <Building2 className="mx-auto h-12 w-12 text-zinc-600" />
             <p className="mt-4 text-lg font-medium text-zinc-300">You haven&apos;t listed any studios yet.</p>
-            <Button
-              render={<Link href="/add-studio" />}
-              className="mt-4 rounded-xl bg-amber-400 font-semibold text-zinc-950"
+            <Link
+              href="/add-studio"
+              className={buttonVariants({
+                className: "mt-4 rounded-xl bg-amber-400 font-semibold text-zinc-950",
+              })}
             >
               Create Your First Listing
-            </Button>
+            </Link>
           </div>
         ) : (
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -161,13 +168,16 @@ export default function MyListingsPage() {
                 </div>
 
                 <div className="mt-5 flex items-center gap-2 border-t border-white/[0.06] pt-4">
-                  <Button
-                    render={<Link href={`/studios/edit/${studio._id}`} />}
-                    variant="outline"
-                    className="flex-1 rounded-xl border-white/15 bg-white/[0.03] text-xs text-zinc-200 hover:bg-white/[0.08]"
+                  <Link
+                    href={`/studios/edit/${studio._id}`}
+                    className={buttonVariants({
+                      variant: "outline",
+                      className:
+                        "flex-1 rounded-xl border-white/15 bg-white/[0.03] text-xs text-zinc-200 hover:bg-white/[0.08]",
+                    })}
                   >
                     <Edit className="mr-1.5 h-3.5 w-3.5 text-amber-400" /> Update
-                  </Button>
+                  </Link>
                   <Button
                     onClick={() => setStudioToDelete(studio)}
                     disabled={deletingStudioId !== null}

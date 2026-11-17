@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getApiUrl } from "@/lib/api-url";
@@ -254,12 +254,14 @@ export default function EditStudioPage({ params }: { params: Promise<{ id: strin
         <p className="text-lg font-medium text-zinc-300">
           Log in to manage your studio listings.
         </p>
-        <Button
-          render={<Link href="/login" />}
-          className="mt-4 rounded-xl bg-amber-400 font-semibold text-zinc-950"
+        <Link
+          href="/login"
+          className={buttonVariants({
+            className: "mt-4 rounded-xl bg-amber-400 font-semibold text-zinc-950",
+          })}
         >
           Log in
-        </Button>
+        </Link>
       </div>
     );
   }
@@ -272,18 +274,20 @@ export default function EditStudioPage({ params }: { params: Promise<{ id: strin
     return (
       <div className="flex min-h-[calc(100vh-5rem)] flex-col items-center justify-center bg-[#09090B] text-white">
         <p className="text-lg font-medium text-zinc-400">Unable to load this studio listing.</p>
-        <Button
-          render={<Link href="/my-listings" />}
-          className="mt-4 bg-amber-400 font-semibold text-zinc-950"
+        <Link
+          href="/my-listings"
+          className={buttonVariants({
+            className: "mt-4 bg-amber-400 font-semibold text-zinc-950",
+          })}
         >
           Back to My Listings
-        </Button>
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
+    <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
       {/* Ambient Spotlight Glow */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[760px] -translate-x-1/2 rounded-full bg-amber-500/[0.08] blur-[130px]" />
 
@@ -291,13 +295,15 @@ export default function EditStudioPage({ params }: { params: Promise<{ id: strin
         
         {/* Back Button & Header */}
         <div className="mb-8 border-b border-white/[0.08] pb-6">
-          <Button
-            render={<Link href="/my-listings" />}
-            variant="ghost"
-            className="mb-4 h-8 px-2 text-zinc-400 hover:text-white"
+          <Link
+            href="/my-listings"
+            className={buttonVariants({
+              variant: "ghost",
+              className: "mb-4 h-8 px-2 text-zinc-400 hover:text-white",
+            })}
           >
             <ArrowLeft className="mr-1.5 h-4 w-4" /> Back to My Listings
-          </Button>
+          </Link>
 
           <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-amber-300">
             <Sparkles className="h-3 w-3" />
@@ -556,7 +562,7 @@ export default function EditStudioPage({ params }: { params: Promise<{ id: strin
               4. Amenities &amp; Equipment
             </h2>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {AVAILABLE_AMENITIES.map((amenity) => {
                 const selected = selectedAmenities.includes(amenity);
                 return (

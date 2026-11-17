@@ -161,7 +161,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
           {/* Desktop links */}
           <nav
             aria-label="Main"
-            className="hidden items-center gap-1 rounded-full border border-black/10 bg-black/5 p-1 dark:border-white/10 dark:bg-white/5 md:flex"
+            className="hidden items-center gap-1 rounded-full border border-black/10 bg-black/5 p-1 dark:border-white/10 dark:bg-white/5 lg:flex"
           >
             {NAV_LINKS.map((l) => {
               const active = isActive(pathname, l.href);
@@ -191,7 +191,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
             ) : user ? (
               <div
                 ref={menuRef}
-                className="relative hidden md:block"
+                className="relative hidden lg:block"
               >
                 <button
                   type="button"
@@ -260,7 +260,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
                 )}
               </div>
             ) : (
-              <div className="hidden items-center gap-2 md:flex">
+              <div className="hidden items-center gap-2 lg:flex">
                 <Link
                   href="/login"
                   className="rounded-full px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
@@ -282,7 +282,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
               onClick={() => setMobileOpen((o) => !o)}
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
-              className="grid h-10 w-10 place-items-center rounded-full border border-black/10 text-zinc-700 dark:border-white/10 dark:text-zinc-300 md:hidden"
+              className="grid h-10 w-10 place-items-center rounded-full border border-black/10 text-zinc-700 dark:border-white/10 dark:text-zinc-300 lg:hidden"
             >
               {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -291,7 +291,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
 
         {/* Mobile panel */}
         {mobileOpen && (
-          <div className="border-t border-black/10 bg-white px-4 pb-5 pt-3 dark:border-white/10 dark:bg-[#0b0b0d] md:hidden">
+          <div className="border-t border-black/10 bg-white px-4 pb-5 pt-3 dark:border-white/10 dark:bg-[#0b0b0d] lg:hidden">
             <nav aria-label="Mobile" className="flex flex-col gap-1">
               {NAV_LINKS.map((l) => {
                 const active = isActive(pathname, l.href);
