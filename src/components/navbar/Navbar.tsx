@@ -94,6 +94,11 @@ function Avatar({ name, image }: { name?: string | null; image?: string | null }
 
 export default function Navbar() {
   const pathname = usePathname();
+
+  return <NavbarContent key={pathname} pathname={pathname} />;
+}
+
+function NavbarContent({ pathname }: { pathname: string }) {
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
@@ -102,12 +107,6 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false); // hamburger panel
   const menuRef = useRef<HTMLDivElement>(null);
   const [confirmLogout, setConfirmLogout] = useState(false);
-
-  // Close menus on route change
-  useEffect(() => {
-    setMenuOpen(false);
-    setMobileOpen(false);
-  }, [pathname]);
 
   // Close dropdown on outside click / Escape
   useEffect(() => {
@@ -137,7 +136,9 @@ export default function Navbar() {
           router.push("/");
           router.refresh();
         },
-        onError: () => toast.error("Couldn't log out. Please try again."),
+        onError: () => {
+          toast.error("Couldn't log out. Please try again.");
+        },
       },
     });
     setConfirmLogout(false);
@@ -196,8 +197,6 @@ export default function Navbar() {
               <div
                 ref={menuRef}
                 className="relative hidden md:block"
-                onMouseEnter={() => setMenuOpen(true)}
-                onMouseLeave={() => setMenuOpen(false)}
               >
                 <button
                   type="button"
@@ -217,7 +216,6 @@ export default function Navbar() {
                 </button>
 
                 {menuOpen && (
-                  // pt-2 keeps hover alive while the pointer crosses the gap
                   <div className="absolute right-0 top-full w-72 pt-2">
                     <div
                       role="menu"
@@ -237,6 +235,7 @@ export default function Navbar() {
                             key={href}
                             href={href}
                             role="menuitem"
+                            onClick={() => setMenuOpen(false)}
                             className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
                               active
                                 ? "bg-amber-400/15 text-amber-600 dark:text-amber-400"
@@ -305,6 +304,8 @@ export default function Navbar() {
                   <Link
                     key={l.href}
                     href={l.href}
+                    aria-current={active ? "page" : undefined}
+                    onClick={() => setMobileOpen(false)}
                     className={`rounded-xl px-4 py-3 text-sm font-medium ${
                       active
                         ? "bg-amber-400/15 text-amber-600 dark:text-amber-400"
@@ -334,6 +335,7 @@ export default function Navbar() {
                   <Link
                     key={href}
                     href={href}
+                    onClick={() => setMobileOpen(false)}
                     className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-zinc-700 dark:text-zinc-300"
                   >
                     <Icon size={18} />
@@ -389,7 +391,7 @@ export default function Navbar() {
               Log out of StudioSpace?
             </h2>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              You'll need to log in again to manage your listings and bookings.
+              You&apos;ll need to log in again to manage your listings and bookings.
             </p>
             <div className="mt-6 flex justify-end gap-3">
               <button
