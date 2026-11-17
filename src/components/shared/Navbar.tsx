@@ -57,8 +57,9 @@ function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-      aria-label="Toggle theme"
-      className="grid h-10 w-10 place-items-center rounded-full border border-black/10 bg-black/5 text-zinc-700 transition hover:border-amber-400/60 hover:text-amber-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300"
+      aria-label="Toggle light and dark theme"
+      title="Toggle light and dark theme"
+      className="grid h-10 w-10 place-items-center rounded-full border border-border bg-muted text-muted-foreground transition hover:border-amber-400/60 hover:bg-accent hover:text-accent-foreground"
     >
       <SunMoon size={18} />
     </button>
@@ -141,7 +142,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-black/10 bg-white/80 backdrop-blur-xl dark:border-white/10 dark:bg-[#0b0b0d]/80">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-xl">
         <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3" aria-label="StudioSpace home">
@@ -149,7 +150,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
               <Aperture size={22} />
             </span>
             <span className="leading-tight">
-              <span className="block text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white">
+              <span className="block text-lg font-extrabold tracking-tight text-foreground">
                 Studio<span className="text-amber-400">Space</span>
               </span>
               <span className="hidden text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500 sm:block">
@@ -161,7 +162,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
           {/* Desktop links */}
           <nav
             aria-label="Main"
-            className="hidden items-center gap-1 rounded-full border border-black/10 bg-black/5 p-1 dark:border-white/10 dark:bg-white/5 lg:flex"
+            className="hidden items-center gap-1 rounded-full border border-border bg-muted p-1 lg:flex"
           >
             {NAV_LINKS.map((l) => {
               const active = isActive(pathname, l.href);
@@ -172,8 +173,8 @@ function NavbarContent({ pathname }: { pathname: string }) {
                   aria-current={active ? "page" : undefined}
                   className={`rounded-full px-4 py-2 text-sm font-medium transition ${
                     active
-                      ? "bg-white text-zinc-900 shadow-sm ring-1 ring-amber-400/60 dark:bg-white/10 dark:text-white"
-                      : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+                      ? "bg-card text-card-foreground shadow-sm ring-1 ring-amber-400/60"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {l.label}
@@ -187,7 +188,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
             <ThemeToggle />
 
             {isPending ? (
-              <div className="h-10 w-28 animate-pulse rounded-full bg-black/10 dark:bg-white/10" />
+              <div className="h-10 w-28 animate-pulse rounded-full bg-muted" />
             ) : user ? (
               <div
                 ref={menuRef}
@@ -201,7 +202,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
                   className="flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/5 py-1 pl-1 pr-3 transition hover:border-amber-400"
                 >
                   <Avatar name={user.name} image={user.image} />
-                  <span className="max-w-[120px] truncate text-sm font-semibold text-zinc-900 dark:text-white">
+                  <span className="max-w-[120px] truncate text-sm font-semibold text-foreground">
                     {user.name}
                   </span>
                   <ChevronDown
@@ -214,15 +215,15 @@ function NavbarContent({ pathname }: { pathname: string }) {
                   <div className="absolute right-0 top-full w-72 pt-2">
                     <div
                       role="menu"
-                      className="overflow-hidden rounded-2xl border border-black/10 bg-white p-2 shadow-2xl dark:border-white/10 dark:bg-[#121216]"
+                      className="overflow-hidden rounded-2xl border border-border bg-popover p-2 text-popover-foreground shadow-2xl"
                     >
                       <div className="px-3 py-3">
-                        <p className="truncate text-sm font-bold text-zinc-900 dark:text-white">
+                        <p className="truncate text-sm font-bold text-foreground">
                           {user.name}
                         </p>
-                        <p className="truncate text-xs text-zinc-500">{user.email}</p>
+                        <p className="truncate text-xs text-muted-foreground">{user.email}</p>
                       </div>
-                      <div className="my-1 h-px bg-black/10 dark:bg-white/10" />
+                      <div className="my-1 h-px bg-border" />
                       {MENU_ITEMS.map(({ href, label, icon: Icon }) => {
                         const active = isActive(pathname, href);
                         return (
@@ -234,7 +235,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
                             className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
                               active
                                 ? "bg-amber-400/15 text-amber-600 dark:text-amber-400"
-                                : "text-zinc-700 hover:bg-black/5 dark:text-zinc-300 dark:hover:bg-white/5"
+                                : "text-foreground hover:bg-muted"
                             }`}
                           >
                             <Icon size={18} />
@@ -242,7 +243,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
                           </Link>
                         );
                       })}
-                      <div className="my-1 h-px bg-black/10 dark:bg-white/10" />
+                      <div className="my-1 h-px bg-border" />
                       <button
                         type="button"
                         role="menuitem"
@@ -250,7 +251,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
                           setMenuOpen(false);
                           setConfirmLogout(true);
                         }}
-                        className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-rose-500 transition hover:bg-rose-500/10"
+                        className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-rose-600 transition hover:bg-rose-500/10 dark:text-rose-400"
                       >
                         <LogOut size={18} />
                         Logout
@@ -282,7 +283,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
               onClick={() => setMobileOpen((o) => !o)}
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
-              className="grid h-10 w-10 place-items-center rounded-full border border-black/10 text-zinc-700 dark:border-white/10 dark:text-zinc-300 lg:hidden"
+              className="grid h-10 w-10 place-items-center rounded-full border border-border text-muted-foreground transition hover:bg-muted hover:text-foreground lg:hidden"
             >
               {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -291,7 +292,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
 
         {/* Mobile panel */}
         {mobileOpen && (
-          <div className="border-t border-black/10 bg-white px-4 pb-5 pt-3 dark:border-white/10 dark:bg-[#0b0b0d] lg:hidden">
+          <div className="border-t border-border bg-background px-4 pb-5 pt-3 lg:hidden">
             <nav aria-label="Mobile" className="flex flex-col gap-1">
               {NAV_LINKS.map((l) => {
                 const active = isActive(pathname, l.href);
@@ -304,7 +305,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
                     className={`rounded-xl px-4 py-3 text-sm font-medium ${
                       active
                         ? "bg-amber-400/15 text-amber-600 dark:text-amber-400"
-                        : "text-zinc-700 dark:text-zinc-300"
+                        : "text-foreground hover:bg-muted"
                     }`}
                   >
                     {l.label}
@@ -313,17 +314,17 @@ function NavbarContent({ pathname }: { pathname: string }) {
               })}
             </nav>
 
-            <div className="my-3 h-px bg-black/10 dark:bg-white/10" />
+            <div className="my-3 h-px bg-border" />
 
             {user ? (
               <>
                 <div className="flex items-center gap-3 px-2 pb-2">
                   <Avatar name={user.name} image={user.image} />
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-bold text-zinc-900 dark:text-white">
+                    <p className="truncate text-sm font-bold text-foreground">
                       {user.name}
                     </p>
-                    <p className="truncate text-xs text-zinc-500">{user.email}</p>
+                    <p className="truncate text-xs text-muted-foreground">{user.email}</p>
                   </div>
                 </div>
                 {MENU_ITEMS.map(({ href, label, icon: Icon }) => (
@@ -331,7 +332,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
                     key={href}
                     href={href}
                     onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                    className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-foreground hover:bg-muted"
                   >
                     <Icon size={18} />
                     {label}
@@ -343,7 +344,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
                     setMobileOpen(false);
                     setConfirmLogout(true);
                   }}
-                  className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-rose-500"
+                  className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-rose-600 dark:text-rose-400"
                 >
                   <LogOut size={18} />
                   Logout
@@ -353,7 +354,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
               <div className="grid grid-cols-2 gap-3">
                 <Link
                   href="/login"
-                  className="rounded-full border border-black/15 py-2.5 text-center text-sm font-semibold text-zinc-800 dark:border-white/15 dark:text-white"
+                  className="rounded-full border border-border py-2.5 text-center text-sm font-semibold text-foreground transition hover:bg-muted"
                 >
                   Login
                 </Link>
@@ -380,26 +381,26 @@ function NavbarContent({ pathname }: { pathname: string }) {
             aria-modal="true"
             aria-labelledby="logout-title"
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm rounded-2xl border border-black/10 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-[#121216]"
+            className="w-full max-w-sm rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-2xl"
           >
-            <h2 id="logout-title" className="text-lg font-bold text-zinc-900 dark:text-white">
+            <h2 id="logout-title" className="text-lg font-bold text-foreground">
               Log out of StudioSpace?
             </h2>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="mt-2 text-sm text-muted-foreground">
               You&apos;ll need to log in again to manage your listings and bookings.
             </p>
             <div className="mt-6 flex justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setConfirmLogout(false)}
-                className="rounded-full px-4 py-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300"
+                className="rounded-full px-4 py-2 text-sm font-semibold text-muted-foreground hover:text-foreground"
               >
                 Stay logged in
               </button>
               <button
                 type="button"
                 onClick={handleLogout}
-                className="rounded-full bg-rose-500 px-5 py-2 text-sm font-bold text-white hover:bg-rose-400"
+                className="rounded-full bg-rose-600 px-5 py-2 text-sm font-bold text-white hover:bg-rose-500 dark:bg-rose-500 dark:hover:bg-rose-400"
               >
                 Log out
               </button>

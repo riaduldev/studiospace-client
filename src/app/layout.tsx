@@ -52,9 +52,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <ThemeProvider>
           <Navbar />
-          <main>{children}</main>
+          <main className="flex-1">{children}</main>
           <Footer />
-          <Toaster position="top-right" theme="dark" richColors closeButton />
+          <Toaster position="top-right" theme="system" richColors closeButton />
         </ThemeProvider>
       </body>
     </html>
