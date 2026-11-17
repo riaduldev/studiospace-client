@@ -12,10 +12,9 @@ import {
   LayoutGrid,
   LogOut,
   Menu,
-  Moon,
   PlusCircle,
   Store,
-  Sun,
+  SunMoon,
   X,
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
@@ -54,18 +53,14 @@ function initials(name?: string | null) {
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
 
-  const isDark = resolvedTheme === "dark";
-
   return (
     <button
       type="button"
-      onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={
-        isDark ? "Switch to light theme" : "Switch to dark theme"
-      }
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+      aria-label="Toggle theme"
       className="grid h-10 w-10 place-items-center rounded-full border border-black/10 bg-black/5 text-zinc-700 transition hover:border-amber-400/60 hover:text-amber-500 dark:border-white/10 dark:bg-white/5 dark:text-zinc-300"
     >
-      {isDark ? <Sun size={18} /> : <Moon size={18} />}
+      <SunMoon size={18} />
     </button>
   );
 }
