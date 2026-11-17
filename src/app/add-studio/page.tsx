@@ -12,6 +12,7 @@ import {
   MapPin,
   Image as ImageIcon,
   Check,
+  X,
   Loader2,
   Sparkles,
 } from "lucide-react";
@@ -67,7 +68,7 @@ export default function AddStudioPage() {
 
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [imageUrl, setImageUrl] = useState("");
-  const [imagePreview, setImagePreview] = useState("");
+  const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -87,25 +88,47 @@ export default function AddStudioPage() {
   };
 
   const handleImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const input = e.currentTarget;
+    const files = Array.from(input.files ?? []);
+    if (files.length === 0) return;
 
-    setImagePreview(URL.createObjectURL(file));
+    const invalidFile = files.find(
+      (file) => !file.type.startsWith("image/") || file.size > 10 * 1024 * 1024
+    );
+    if (invalidFile) {
+      toast.error("Choose image files that are 10 MB or smaller.");
+      input.value = "";
+      return;
+    }
 
     try {
       setIsUploadingImage(true);
-      toast.info("Uploading studio image to server...");
+      toast.info(`Uploading ${files.length} studio image${files.length > 1 ? "s" : ""}...`);
 
-      const uploadedUrl = await uploadImageToServer(file);
-      setImageUrl(uploadedUrl);
-      toast.success("Image uploaded successfully!");
+      const results = await Promise.allSettled(files.map(uploadImageToServer));
+      const uploadedUrls = results.flatMap((result) =>
+        result.status === "fulfilled" ? [result.value] : []
+      );
+      const failedCount = results.length - uploadedUrls.length;
+
+      if (uploadedUrls.length > 0) {
+        if (imageUrl) {
+          setGalleryImages((current) => [...current, ...uploadedUrls]);
+        } else {
+          setImageUrl(uploadedUrls[0]);
+          setGalleryImages((current) => [...current, ...uploadedUrls.slice(1)]);
+        }
+        toast.success(`${uploadedUrls.length} image${uploadedUrls.length > 1 ? "s" : ""} uploaded.`);
+      }
+      if (failedCount > 0) {
+        toast.error(`${failedCount} image${failedCount > 1 ? "s" : ""} could not be uploaded.`);
+      }
     } catch (error) {
       console.error(error);
-      toast.error("Image upload failed. Using fallback placeholder.");
-      // ব্যাকএন্ডে আপলোড ফেইল করলেও যেন ইউজার আটকে না যায়, একটি ডিফল্ট লিংক সেট করে দেওয়া হলো
-      setImageUrl("https://i.ibb.co.com/6X10V18/placeholder-studio.jpg");
+      toast.error(error instanceof Error ? error.message : "Image upload failed.");
     } finally {
       setIsUploadingImage(false);
+      input.value = "";
     }
   };
 
@@ -122,6 +145,10 @@ export default function AddStudioPage() {
       toast.error("Please fill in all required fields (Title, Hourly Rate, Location).");
       return;
     }
+    if (!imageUrl) {
+      toast.error("Upload a studio image or provide a valid image URL.");
+      return;
+    }
 
     try {
       setIsSubmitting(true);
@@ -131,7 +158,8 @@ export default function AddStudioPage() {
         hourlyRate: Number(formData.hourlyRate),
         securityDeposit: Number(formData.securityDeposit || 0),
         maxCapacity: Number(formData.maxCapacity || 1),
-        imageUrl: imageUrl || "https://i.ibb.co.com/6X10V18/placeholder-studio.jpg",
+        imageUrl,
+        galleryImages: [imageUrl, ...galleryImages],
         amenities: selectedAmenities,
         ownerName: user.name || user.email,
         ownerEmail: user.email,
@@ -140,6 +168,7 @@ export default function AddStudioPage() {
       const response = await fetch(getApiUrl("/api/studios"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(studioPayload),
       });
 
@@ -200,6 +229,37 @@ export default function AddStudioPage() {
           <p className="mt-1 text-sm text-zinc-400">
             Publish your soundstage, cyclorama loft, or recording suite for creators worldwide.
           </p>
+        </div>
+
+        <div className="mb-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
+          <h2 className="text-sm font-semibold text-zinc-200">Host Information</h2>
+          <p className="mt-1 text-xs text-zinc-500">
+            These details come from your signed-in account and cannot be changed here.
+          </p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="hostName" className="text-xs font-medium text-zinc-300">
+                Host Name
+              </Label>
+              <Input
+                id="hostName"
+                value={user.name || user.email}
+                readOnly
+                className="h-10 border-white/10 bg-white/[0.03] text-sm text-zinc-400"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="hostEmail" className="text-xs font-medium text-zinc-300">
+                Host Email
+              </Label>
+              <Input
+                id="hostEmail"
+                value={user.email}
+                readOnly
+                className="h-10 border-white/10 bg-white/[0.03] text-sm text-zinc-400"
+              />
+            </div>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -344,7 +404,7 @@ export default function AddStudioPage() {
 
             <div className="space-y-3">
               <Label className="text-xs font-medium text-zinc-300">
-                Upload Cover Photo or Provide Direct Image URL *
+                Upload Studio Photos or Provide a Cover Image URL *
               </Label>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                 <div className="relative flex-1">
@@ -352,6 +412,7 @@ export default function AddStudioPage() {
                   <Input
                     type="file"
                     accept="image/*"
+                    multiple
                     onChange={handleImageFileChange}
                     disabled={isUploadingImage}
                     className="h-11 cursor-pointer rounded-xl border-white/10 bg-white/[0.03] pl-10 pt-2 text-sm text-zinc-300 file:mr-4 file:rounded-lg file:border-0 file:bg-amber-400 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-zinc-950 hover:file:bg-amber-300"
@@ -367,11 +428,12 @@ export default function AddStudioPage() {
               {/* সরাসরি ইমেজ লিংক বসানোর অপশন */}
               <div className="space-y-1 pt-1">
                 <Label htmlFor="imageUrlInput" className="text-[11px] text-zinc-400">
-                  Or paste direct image URL here:
+                  Cover image URL (required):
                 </Label>
                 <Input
                   id="imageUrlInput"
                   type="url"
+                  required
                   placeholder="https://i.ibb.co/... or any image link"
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
@@ -379,16 +441,36 @@ export default function AddStudioPage() {
                 />
               </div>
 
-              {(imagePreview || imageUrl) && (
+              {imageUrl && (
                 <div className="relative mt-2 h-48 w-full overflow-hidden rounded-2xl border border-white/15 bg-zinc-900">
-                  <img
-                    src={imagePreview || imageUrl}
-                    alt="Studio preview"
-                    className="h-full w-full object-cover"
-                  />
+                  <img src={imageUrl} alt="Studio cover preview" className="h-full w-full object-cover" />
                   <span className="absolute bottom-3 right-3 rounded-full bg-emerald-500/95 px-3 py-1 text-xs font-semibold text-zinc-950 shadow-lg">
-                    ✓ Image Ready
+                    Cover image ready
                   </span>
+                </div>
+              )}
+              {galleryImages.length > 0 && (
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  {galleryImages.map((galleryImage, index) => (
+                    <div
+                      key={`${galleryImage}-${index}`}
+                      className="group relative h-28 overflow-hidden rounded-xl border border-white/10 bg-zinc-900"
+                    >
+                      <img src={galleryImage} alt={`Studio gallery image ${index + 1}`} className="h-full w-full object-cover" />
+                      <button
+                        type="button"
+                        aria-label={`Remove gallery image ${index + 1}`}
+                        onClick={() =>
+                          setGalleryImages((current) =>
+                            current.filter((_, imageIndex) => imageIndex !== index)
+                          )
+                        }
+                        className="absolute right-2 top-2 grid size-7 place-items-center rounded-full bg-zinc-950/85 text-white opacity-0 transition group-hover:opacity-100 focus:opacity-100"
+                      >
+                        <X className="size-4" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>

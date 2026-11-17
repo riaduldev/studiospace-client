@@ -2,7 +2,18 @@
 
 import React, { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
-import { MapPin, Users, ShieldCheck, Star, Calendar, Loader2, CheckCircle2, ArrowLeft } from "lucide-react";
+import {
+  MapPin,
+  Users,
+  ShieldCheck,
+  Star,
+  Calendar,
+  Loader2,
+  CheckCircle2,
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +22,21 @@ import { getApiUrl } from "@/lib/api-url";
 import { authClient } from "@/lib/auth-client";
 import { BrandedLoader } from "@/components/shared/loading-state";
 import Link from "next/link";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+interface StudioReview {
+  _id?: string;
+  reviewerName?: string;
+  rating: number;
+  comment: string;
+  createdAt?: string;
+}
 
 interface Studio {
   _id: string;
@@ -21,11 +47,13 @@ interface Studio {
   maxCapacity: number;
   location: string;
   imageUrl: string;
+  galleryImages?: string[];
   overview?: string;
   amenities?: string[];
   ownerName: string;
   ownerEmail: string;
   rating?: number;
+  reviews?: StudioReview[];
 }
 
 export default function StudioDetailsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -33,7 +61,7 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
   const id = resolvedParams.id;
   const router = useRouter();
   
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending: isSessionPending } = authClient.useSession();
   const user = session?.user;
 
   const [studioResult, setStudioResult] = useState<{
@@ -44,6 +72,8 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
   const studio = studioResult?.id === id ? studioResult.studio : null;
   const [bookingDate, setBookingDate] = useState("");
   const [isBookingSubmitting, setIsBookingSubmitting] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -96,30 +126,23 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
     try {
       setIsBookingSubmitting(true);
 
-      const bookingPayload = {
-        studioId: studio?._id,
-        studioTitle: studio?.title,
-        studioLocation: studio?.location,
-        studioImage: studio?.imageUrl,
-        userEmail: user.email,
-        userName: user.name || user.email,
-        bookingDate,
-        totalPrice: (studio?.hourlyRate || 0) * 4 + (studio?.securityDeposit || 0), // ধরে নিচ্ছি ডিফল্ট ৪ ঘণ্টার সেশন
-      };
+      const bookingPayload = { studioId: studio?._id, bookingDate };
 
       const res = await fetch(getApiUrl("/api/bookings"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(bookingPayload),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
 
-      if (res.ok && data.success) {
+      if (res.ok && data?.success) {
         toast.success("Booking request submitted successfully!");
+        setIsBookingOpen(false);
         router.push("/my-bookings");
       } else {
-        throw new Error(data.message || "Failed to submit booking.");
+        throw new Error(data?.message || "Failed to submit booking.");
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Something went wrong.";
@@ -144,6 +167,11 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
     );
   }
 
+  const galleryImages = [
+    ...new Set([studio.imageUrl, ...(studio.galleryImages ?? [])].filter(Boolean)),
+  ];
+  const currentImage = galleryImages[activeImageIndex % galleryImages.length] || studio.imageUrl;
+
   return (
     <div className="relative min-h-[calc(100vh-5rem)] bg-[#09090B] px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
@@ -151,9 +179,9 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Studios
         </Button>
 
-        {/* Studio Hero Banner */}
+        {/* Studio photo gallery */}
         <div className="relative h-72 sm:h-[400px] w-full overflow-hidden rounded-3xl border border-white/10 bg-zinc-900">
-          <img src={studio.imageUrl} alt={studio.title} className="h-full w-full object-cover" />
+          <img src={currentImage} alt={`${studio.title} studio photo ${activeImageIndex + 1}`} className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
           <div className="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
@@ -170,7 +198,59 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
               <p className="text-2xl font-bold text-amber-400">${studio.hourlyRate}<span className="text-xs font-normal text-zinc-400">/hr</span></p>
             </div>
           </div>
+          {galleryImages.length > 1 && (
+            <>
+              <button
+                type="button"
+                aria-label="Show previous studio photo"
+                onClick={() =>
+                  setActiveImageIndex((index) =>
+                    (index - 1 + galleryImages.length) % galleryImages.length
+                  )
+                }
+                className="absolute left-4 top-1/2 z-20 grid size-10 -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-zinc-950/70 text-white backdrop-blur transition hover:bg-zinc-950"
+              >
+                <ChevronLeft className="size-5" />
+              </button>
+              <button
+                type="button"
+                aria-label="Show next studio photo"
+                onClick={() =>
+                  setActiveImageIndex((index) => (index + 1) % galleryImages.length)
+                }
+                className="absolute right-4 top-1/2 z-20 grid size-10 -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-zinc-950/70 text-white backdrop-blur transition hover:bg-zinc-950"
+              >
+                <ChevronRight className="size-5" />
+              </button>
+              <span
+                aria-live="polite"
+                className="absolute right-5 top-5 z-20 rounded-full border border-white/20 bg-zinc-950/75 px-3 py-1 text-xs font-medium text-white backdrop-blur"
+              >
+                {activeImageIndex % galleryImages.length + 1} / {galleryImages.length}
+              </span>
+            </>
+          )}
         </div>
+        {galleryImages.length > 1 && (
+          <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
+            {galleryImages.map((image, index) => (
+              <button
+                key={`${image}-${index}`}
+                type="button"
+                aria-label={`Show studio photo ${index + 1}`}
+                aria-pressed={index === activeImageIndex % galleryImages.length}
+                onClick={() => setActiveImageIndex(index)}
+                className={`h-16 w-24 shrink-0 overflow-hidden rounded-lg border transition ${
+                  index === activeImageIndex % galleryImages.length
+                    ? "border-amber-400"
+                    : "border-white/10 opacity-60 hover:opacity-100"
+                }`}
+              >
+                <img src={image} alt="" className="h-full w-full object-cover" />
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Content Grid */}
         <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-3">
@@ -220,57 +300,144 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
               <p className="mt-1 text-base font-bold text-white">{studio.ownerName}</p>
               <p className="text-xs text-zinc-400">{studio.ownerEmail}</p>
             </div>
+
+            <section className="space-y-4" aria-labelledby="studio-reviews-heading">
+              <div className="flex items-center justify-between">
+                <h2 id="studio-reviews-heading" className="text-lg font-bold text-white">
+                  Creator Reviews
+                </h2>
+                <span className="flex items-center gap-1 text-sm font-semibold text-amber-400">
+                  <Star className="size-4 fill-current" />
+                  {typeof studio.rating === "number" && studio.rating > 0
+                    ? studio.rating.toFixed(1)
+                    : "New"}
+                </span>
+              </div>
+              {studio.reviews?.length ? (
+                <div className="space-y-3">
+                  {studio.reviews.map((review, index) => (
+                    <article
+                      key={review._id ?? `${review.reviewerName}-${index}`}
+                      className="rounded-2xl border border-white/[0.08] bg-zinc-950/60 p-5"
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        <p className="font-semibold text-zinc-200">
+                          {review.reviewerName || "StudioSpace creator"}
+                        </p>
+                        <span className="flex items-center gap-1 text-sm text-amber-400">
+                          <Star className="size-3.5 fill-current" />
+                          {review.rating}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-sm leading-relaxed text-zinc-400">{review.comment}</p>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-5 text-sm text-zinc-500">
+                  No reviews yet. Book a session and be among the first to share feedback.
+                </div>
+              )}
+            </section>
           </div>
 
-          {/* Right Booking Card */}
+          {/* Booking call to action */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 rounded-3xl border border-white/10 bg-zinc-950/90 p-6 shadow-2xl backdrop-blur-2xl">
-              <h3 className="text-lg font-bold text-white">Book This Space</h3>
-              <p className="mt-1 text-xs text-zinc-400">Secure your session with instant confirmation.</p>
-
-              <form onSubmit={handleBookingSubmit} className="mt-6 space-y-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="bookingDate" className="text-xs font-medium text-zinc-300">Select Date *</Label>
-                  <div className="relative">
-                    <Calendar className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
-                    <Input
-                      id="bookingDate"
-                      type="date"
-                      required
-                      value={bookingDate}
-                      onChange={(e) => setBookingDate(e.target.value)}
-                      className="h-11 rounded-xl border-white/10 bg-white/[0.03] pl-10 text-sm text-white"
-                    />
-                  </div>
-                </div>
-
-                <div className="border-t border-white/10 pt-4 space-y-2 text-xs text-zinc-300">
-                  <div className="flex justify-between">
-                    <span>Hourly Rate ({studio.hourlyRate}$ × 4 hrs):</span>
-                    <span>${studio.hourlyRate * 4}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Security Deposit (Refundable):</span>
-                    <span>${studio.securityDeposit}</span>
-                  </div>
-                  <div className="flex justify-between border-t border-white/10 pt-2 text-sm font-bold text-white">
-                    <span>Total Estimated:</span>
-                    <span className="text-amber-400">${(studio.hourlyRate * 4) + studio.securityDeposit}</span>
-                  </div>
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={isBookingSubmitting}
-                  className="h-12 w-full rounded-xl bg-amber-400 text-sm font-semibold text-zinc-950 hover:bg-amber-300"
-                >
-                  {isBookingSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Confirm Studio Reservation"}
-                </Button>
-              </form>
+              <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">
+                Reserve this space
+              </span>
+              <h2 className="mt-2 text-xl font-bold text-white">{studio.title}</h2>
+              <p className="mt-2 text-sm text-zinc-400">
+                ${studio.hourlyRate}/hour · Four-hour session estimate
+              </p>
+              <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4 text-sm">
+                <span className="text-zinc-400">Estimated total</span>
+                <span className="font-bold text-amber-400">
+                  ${(studio.hourlyRate * 4) + studio.securityDeposit}
+                </span>
+              </div>
+              <Button
+                type="button"
+                disabled={isSessionPending}
+                onClick={() => {
+                  if (!user) {
+                    toast.error("Please log in to book a studio session.");
+                    router.push("/login");
+                    return;
+                  }
+                  setIsBookingOpen(true);
+                }}
+                className="mt-5 h-12 w-full rounded-xl bg-amber-400 text-sm font-semibold text-zinc-950 hover:bg-amber-300"
+              >
+                <Calendar className="mr-2 size-4" />
+                Book Workspace Now
+              </Button>
             </div>
           </div>
         </div>
       </div>
+
+      <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
+        <DialogContent className="max-w-lg border border-white/10 bg-zinc-950 p-6 text-white">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-white">
+              Book Workspace Now
+            </DialogTitle>
+            <DialogDescription className="text-zinc-400">
+              Choose a date to request a four-hour session at {studio.title}.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleBookingSubmit} className="space-y-5">
+            <div className="space-y-1.5">
+              <Label htmlFor="bookingDate" className="text-xs font-medium text-zinc-300">
+                Booking Date *
+              </Label>
+              <div className="relative">
+                <Calendar className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-zinc-500" />
+                <Input
+                  id="bookingDate"
+                  type="date"
+                  required
+                  value={bookingDate}
+                  onChange={(event) => setBookingDate(event.target.value)}
+                  className="h-11 rounded-xl border-white/10 bg-white/[0.03] pl-10 text-sm text-white"
+                />
+              </div>
+            </div>
+            <div className="space-y-2 rounded-xl border border-white/10 bg-white/[0.02] p-4 text-sm">
+              <div className="flex justify-between text-zinc-400">
+                <span>Four hours at ${studio.hourlyRate}/hr</span>
+                <span>${studio.hourlyRate * 4}</span>
+              </div>
+              <div className="flex justify-between text-zinc-400">
+                <span>Refundable security deposit</span>
+                <span>${studio.securityDeposit}</span>
+              </div>
+              <div className="flex justify-between border-t border-white/10 pt-3 font-semibold text-white">
+                <span>Estimated total</span>
+                <span className="text-amber-400">
+                  ${(studio.hourlyRate * 4) + studio.securityDeposit}
+                </span>
+              </div>
+            </div>
+            <Button
+              type="submit"
+              disabled={isBookingSubmitting}
+              className="h-12 w-full rounded-xl bg-amber-400 text-sm font-semibold text-zinc-950 hover:bg-amber-300"
+            >
+              {isBookingSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 size-4 animate-spin" />
+                  Sending booking request...
+                </>
+              ) : (
+                "Confirm Booking Request"
+              )}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

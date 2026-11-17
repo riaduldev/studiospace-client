@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { Search, MapPin, Star, Building2, ArrowRight } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Search, SearchX, MapPin, Star, Building2, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,10 +23,42 @@ interface Studio {
 const CATEGORIES = ["all", "Photo Studio", "Film Stage", "Podcast Lounge", "Music Suite", "Workshop", "Cyclorama Loft"];
 
 export default function StudiosPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[calc(100vh-5rem)] bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <StudioCardSkeletonGrid className="mt-8" />
+          </div>
+        </div>
+      }
+    >
+      <StudiosExplorer />
+    </Suspense>
+  );
+}
+
+function StudiosExplorer() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [studios, setStudios] = useState<Studio[]>([]);
   const [loadedQuery, setLoadedQuery] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const selectedCategory = searchParams.get("category") || "all";
+
+  function updateCategory(category: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (category === "all") {
+      params.delete("category");
+    } else {
+      params.set("category", category);
+    }
+
+    const nextQuery = params.toString();
+    router.push(nextQuery ? `/studios?${nextQuery}` : "/studios", {
+      scroll: false,
+    });
+  }
 
   const queryParams = new URLSearchParams();
   if (selectedCategory !== "all") queryParams.append("category", selectedCategory);
@@ -98,7 +131,7 @@ export default function StudiosPage() {
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
-              onClick={() => setSelectedCategory(cat)}
+              onClick={() => updateCategory(cat)}
               className={`rounded-full px-4 py-2 text-xs font-medium transition-all ${
                 selectedCategory === cat
                   ? "bg-amber-400 text-zinc-950 font-semibold shadow-[0_0_15px_rgba(245,158,11,0.3)]"
@@ -116,8 +149,36 @@ export default function StudiosPage() {
         ) : studios.length === 0 ? (
           <div className="mt-20 text-center">
             <Building2 className="mx-auto h-12 w-12 text-zinc-600" />
-            <p className="mt-4 text-lg font-medium text-zinc-300">No studios found</p>
-            <p className="text-sm text-zinc-500">Try adjusting your search or category filter.</p>
+            <h2 className="mt-4 text-lg font-semibold text-zinc-200">
+              {queryString ? "No studios match your search" : "No studios listed yet"}
+            </h2>
+            <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500">
+              {queryString
+                ? "Try another search or clear your filters to see all available spaces."
+                : "Be the first to share a creative space with the StudioSpace community."}
+            </p>
+            {queryString ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setSearch("");
+                  updateCategory("all");
+                }}
+                className="mt-5 rounded-xl border-white/15 bg-white/[0.03] text-zinc-200 hover:bg-white/[0.08]"
+              >
+                <SearchX className="mr-2 size-4" />
+                Clear search and filters
+              </Button>
+            ) : (
+              <Button
+                render={<Link href="/add-studio" />}
+                className="mt-5 rounded-xl bg-amber-400 font-semibold text-zinc-950 hover:bg-amber-300"
+              >
+                List your studio
+                <ArrowRight className="ml-2 size-4" />
+              </Button>
+            )}
           </div>
         ) : (
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

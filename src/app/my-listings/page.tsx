@@ -2,9 +2,19 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Building2, Trash2, Edit, Plus, MapPin } from "lucide-react";
+import { Building2, Trash2, Edit, Plus, MapPin, Loader2, TriangleAlert } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { getApiUrl } from "@/lib/api-url";
 import { authClient } from "@/lib/auth-client";
 import { BrandedLoader } from "@/components/shared/loading-state";
@@ -24,6 +34,8 @@ export default function MyListingsPage() {
 
   const [studios, setStudios] = useState<Studio[]>([]);
   const [loadedEmail, setLoadedEmail] = useState<string | null>(null);
+  const [studioToDelete, setStudioToDelete] = useState<Studio | null>(null);
+  const [deletingStudioId, setDeletingStudioId] = useState<string | null>(null);
 
   useEffect(() => {
     if (isSessionPending || !userEmail) return;
@@ -35,8 +47,8 @@ export default function MyListingsPage() {
     async function loadListings() {
       try {
         const response = await fetch(
-          getApiUrl(`/api/my-studios/${encodeURIComponent(email)}`),
-          { signal: controller.signal }
+          getApiUrl("/api/my-studios"),
+          { signal: controller.signal, credentials: "include" }
         );
         const data = await response.json();
 
@@ -64,11 +76,13 @@ export default function MyListingsPage() {
   }, [isSessionPending, userEmail]);
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this studio listing?")) return;
+    if (deletingStudioId) return;
 
     try {
+      setDeletingStudioId(id);
       const response = await fetch(getApiUrl(`/api/studios/${id}`), {
         method: "DELETE",
+        credentials: "include",
       });
       const data = await response.json();
 
@@ -82,6 +96,9 @@ export default function MyListingsPage() {
       const message =
         error instanceof Error ? error.message : "Server error during deletion.";
       toast.error(message);
+    } finally {
+      setDeletingStudioId(null);
+      setStudioToDelete(null);
     }
   };
 
@@ -152,7 +169,8 @@ export default function MyListingsPage() {
                     <Edit className="mr-1.5 h-3.5 w-3.5 text-amber-400" /> Update
                   </Button>
                   <Button
-                    onClick={() => handleDelete(studio._id)}
+                    onClick={() => setStudioToDelete(studio)}
+                    disabled={deletingStudioId !== null}
                     className="flex-1 rounded-xl bg-rose-500/10 text-xs font-medium text-rose-400 hover:bg-rose-500/20"
                   >
                     <Trash2 className="mr-1.5 h-3.5 w-3.5" /> Delete
@@ -163,6 +181,46 @@ export default function MyListingsPage() {
           </div>
         )}
       </div>
+      <AlertDialog
+        open={studioToDelete !== null}
+        onOpenChange={(open) => {
+          if (!open && deletingStudioId === null) setStudioToDelete(null);
+        }}
+      >
+        <AlertDialogContent className="border-white/10 bg-zinc-950 text-white">
+          <AlertDialogHeader>
+            <AlertDialogMedia className="bg-rose-500/10 text-rose-400">
+              <TriangleAlert aria-hidden="true" />
+            </AlertDialogMedia>
+            <AlertDialogTitle className="text-white">Delete studio listing?</AlertDialogTitle>
+            <AlertDialogDescription className="text-zinc-400">
+              {studioToDelete
+                ? `“${studioToDelete.title}” will be permanently removed. This action cannot be undone.`
+                : "This listing will be permanently removed."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="border-white/10 bg-white/[0.02]">
+            <AlertDialogCancel disabled={deletingStudioId !== null}>
+              Keep listing
+            </AlertDialogCancel>
+            <Button
+              type="button"
+              onClick={() => {
+                if (studioToDelete) void handleDelete(studioToDelete._id);
+              }}
+              disabled={deletingStudioId !== null}
+              className="bg-rose-500 font-semibold text-white hover:bg-rose-400"
+            >
+              {deletingStudioId === studioToDelete?._id ? (
+                <Loader2 className="mr-2 size-4 animate-spin" />
+              ) : (
+                <Trash2 className="mr-2 size-4" />
+              )}
+              Delete listing
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

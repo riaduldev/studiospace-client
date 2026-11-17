@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Calendar, MapPin, XCircle } from "lucide-react";
+import { Calendar, MapPin, XCircle, ArrowRight, Search, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { getApiUrl } from "@/lib/api-url";
@@ -24,6 +24,7 @@ export default function MyBookingsPage() {
 
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loadedEmail, setLoadedEmail] = useState<string | null>(null);
+  const [cancellingBookingId, setCancellingBookingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (isSessionPending || !userEmail) return;
@@ -34,10 +35,10 @@ export default function MyBookingsPage() {
 
     async function loadBookings() {
       try {
-        const response = await fetch(
-          getApiUrl(`/api/bookings/${encodeURIComponent(email)}`),
-          { signal: controller.signal }
-        );
+        const response = await fetch(getApiUrl("/api/bookings"), {
+          signal: controller.signal,
+          credentials: "include",
+        });
         const data = await response.json();
 
         if (!response.ok || !Array.isArray(data)) {
@@ -64,9 +65,12 @@ export default function MyBookingsPage() {
   }, [isSessionPending, userEmail]);
 
   const handleCancelBooking = async (id: string) => {
+    if (cancellingBookingId) return;
     try {
+      setCancellingBookingId(id);
       const response = await fetch(getApiUrl(`/api/bookings/${id}/cancel`), {
         method: "PATCH",
+        credentials: "include",
       });
       const data = await response.json();
 
@@ -84,6 +88,8 @@ export default function MyBookingsPage() {
       const message =
         error instanceof Error ? error.message : "Server error during cancellation.";
       toast.error(message);
+    } finally {
+      setCancellingBookingId(null);
     }
   };
 
@@ -125,8 +131,21 @@ export default function MyBookingsPage() {
           </div>
         ) : bookings.length === 0 ? (
           <div className="mt-20 text-center">
-            <Calendar className="mx-auto h-12 w-12 text-zinc-600" />
-            <p className="mt-4 text-lg font-medium text-zinc-300">No bookings found.</p>
+            <span className="mx-auto grid size-14 place-items-center rounded-2xl border border-amber-400/20 bg-amber-400/[0.06]">
+              <Calendar aria-hidden="true" className="size-7 text-amber-400" />
+            </span>
+            <h2 className="mt-4 text-lg font-semibold text-zinc-200">No bookings yet</h2>
+            <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500">
+              Find a creative space for your next project and your reservations will show up here.
+            </p>
+            <Button
+              render={<Link href="/studios" />}
+              className="mt-5 rounded-xl bg-amber-400 font-semibold text-zinc-950 hover:bg-amber-300"
+            >
+              <Search aria-hidden="true" className="mr-2 size-4" />
+              Explore studios
+              <ArrowRight aria-hidden="true" className="ml-2 size-4" />
+            </Button>
           </div>
         ) : (
           <div className="mt-8 space-y-4">
@@ -166,9 +185,15 @@ export default function MyBookingsPage() {
                   {booking.status === "Pending" && (
                     <Button
                       onClick={() => handleCancelBooking(booking._id)}
+                      disabled={cancellingBookingId !== null}
                       className="mt-2 rounded-xl bg-rose-500/10 text-xs font-semibold text-rose-400 hover:bg-rose-500/20"
                     >
-                      <XCircle className="mr-1.5 h-3.5 w-3.5" /> Cancel Booking
+                      {cancellingBookingId === booking._id ? (
+                        <Loader2 className="mr-1.5 size-3.5 animate-spin" />
+                      ) : (
+                        <XCircle className="mr-1.5 h-3.5 w-3.5" />
+                      )}
+                      Cancel Booking
                     </Button>
                   )}
                 </div>
