@@ -2,20 +2,37 @@ import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
 
-const client = new MongoClient("mongodb://localhost:27017/database");
+function getRequiredEnv(name: string) {
+  const value = process.env[name]?.trim();
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value;
+}
+
+const baseURL = getRequiredEnv("BETTER_AUTH_URL");
+const parsedBaseURL = new URL(baseURL);
+if (parsedBaseURL.protocol !== "http:" && parsedBaseURL.protocol !== "https:") {
+  throw new Error("BETTER_AUTH_URL must use HTTP or HTTPS.");
+}
+
+const client = new MongoClient(getRequiredEnv("MONGODB_URI"));
 const db = client.db("studio-space");
 
 export const auth = betterAuth({
-    emailAndPassword: { 
-    enabled: true, 
-  }, 
-  socialProviders: { 
-    google: { 
-      clientId: process.env.GOOGLE_CLIENT_ID as string, 
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string, 
-    }, 
-  }, 
-  database: mongodbAdapter(db, {
-    client,
-  }),
+  baseURL,
+  secret: getRequiredEnv("BETTER_AUTH_SECRET"),
+  trustedOrigins: [baseURL],
+  emailAndPassword: {
+    enabled: true,
+    autoSignIn: false,
+    minPasswordLength: 8,
+  },
+  socialProviders: {
+    google: {
+      clientId: getRequiredEnv("GOOGLE_CLIENT_ID"),
+      clientSecret: getRequiredEnv("GOOGLE_CLIENT_SECRET"),
+    },
+  },
+  database: mongodbAdapter(db, { client }),
 });
