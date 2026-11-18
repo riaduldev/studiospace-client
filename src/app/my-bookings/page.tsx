@@ -45,7 +45,11 @@ export default function MyBookingsPage() {
           throw new Error(data?.message || "Failed to fetch bookings.");
         }
 
-        if (active) setBookings(data);
+        if (active) {
+          setBookings(
+            data.filter((booking: Booking) => booking.status !== "Cancelled")
+          );
+        }
       } catch (error) {
         if (active && !controller.signal.aborted) {
           const message =
@@ -79,11 +83,7 @@ export default function MyBookingsPage() {
       }
 
       toast.success("Booking cancelled successfully.");
-      setBookings((prev) =>
-        prev.map((booking) =>
-          booking._id === id ? { ...booking, status: "Cancelled" } : booking
-        )
-      );
+      setBookings((prev) => prev.filter((booking) => booking._id !== id));
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Server error during cancellation.";
@@ -136,7 +136,7 @@ export default function MyBookingsPage() {
             <span className="mx-auto grid size-14 place-items-center rounded-2xl border border-amber-400/20 bg-amber-400/[0.06]">
               <Calendar aria-hidden="true" className="size-7 text-amber-400" />
             </span>
-            <h2 className="mt-4 text-lg font-semibold text-zinc-200">No bookings yet</h2>
+            <h2 className="mt-4 text-lg font-semibold text-zinc-200">No active bookings</h2>
             <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500">
               Find a creative space for your next project and your reservations will show up here.
             </p>

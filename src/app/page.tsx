@@ -38,13 +38,13 @@ const HERO_SLIDES = [
   {
     title: "Curated Cinema & Production Stages",
     subtitle: "Book professional soundstages, cyclorama lofts, and acoustic suites on demand.",
-    image: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1600&auto=format&fit=crop",
+    image: "https://plus.unsplash.com/premium_photo-1710961232986-36cead00da3c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     category: "Film Stage"
   },
   {
     title: "Daylight Lofts & Infinity Cycloramas",
     subtitle: "Engineered for high-end fashion, commercial photo shoots, and creative directors.",
-    image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?q=80&w=1600&auto=format&fit=crop",
+    image: "https://plus.unsplash.com/premium_photo-1661938933735-72b92aabb40d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
     category: "Photo Studio"
   },
   {

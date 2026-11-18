@@ -56,6 +56,23 @@ interface Studio {
   reviews?: StudioReview[];
 }
 
+interface UserBooking {
+  _id: string;
+  studioId?: string;
+  bookingDate: string;
+  status: "Pending" | "Confirmed" | "Completed" | "Cancelled";
+}
+
+function findActiveBooking(bookings: UserBooking[], studioId: string) {
+  return (
+    bookings.find(
+      (booking) =>
+        booking.studioId === studioId &&
+        (booking.status === "Pending" || booking.status === "Confirmed")
+    ) ?? null
+  );
+}
+
 export default function StudioDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const id = resolvedParams.id;
@@ -63,6 +80,7 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
   
   const { data: session, isPending: isSessionPending } = authClient.useSession();
   const user = session?.user;
+  const userEmail = user?.email;
 
   const [studioResult, setStudioResult] = useState<{
     id: string;
@@ -74,6 +92,16 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
   const [isBookingSubmitting, setIsBookingSubmitting] = useState(false);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [bookingCheck, setBookingCheck] = useState<{
+    email: string;
+    booking: UserBooking | null;
+  } | null>(null);
+  const existingBooking =
+    bookingCheck && userEmail && bookingCheck.email === userEmail
+      ? bookingCheck.booking
+      : null;
+  const isCheckingExistingBooking =
+    Boolean(userEmail) && !isSessionPending && bookingCheck?.email !== userEmail;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -109,6 +137,44 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
     };
   }, [id]);
 
+  useEffect(() => {
+    if (isSessionPending || !userEmail) return;
+
+    const email = userEmail;
+    const controller = new AbortController();
+    let active = true;
+
+    async function loadExistingBooking() {
+      try {
+        const response = await fetch(getApiUrl("/api/bookings"), {
+          signal: controller.signal,
+          credentials: "include",
+        });
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok || !Array.isArray(data)) {
+          if (active) setBookingCheck({ email, booking: null });
+          return;
+        }
+
+        const activeBooking = findActiveBooking(data, id);
+
+        if (active) setBookingCheck({ email, booking: activeBooking });
+      } catch (error) {
+        if (active && !controller.signal.aborted) {
+          console.error("Failed to check existing bookings:", error);
+          setBookingCheck({ email, booking: null });
+        }
+      }
+    }
+
+    void loadExistingBooking();
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [id, isSessionPending, userEmail]);
+
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -123,8 +189,45 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
       return;
     }
 
+    if (existingBooking) {
+      toast.error(
+        `You already have a ${existingBooking.status.toLowerCase()} booking for this studio on ${existingBooking.bookingDate}.`
+      );
+      setIsBookingOpen(false);
+      return;
+    }
+
+    if (isCheckingExistingBooking) {
+      toast.error("Still checking your existing bookings. Please try again in a moment.");
+      return;
+    }
+
     try {
       setIsBookingSubmitting(true);
+
+      try {
+        const checkResponse = await fetch(getApiUrl("/api/bookings"), {
+          credentials: "include",
+        });
+        const checkData = await checkResponse.json().catch(() => null);
+
+        if (checkResponse.ok && Array.isArray(checkData)) {
+          const duplicate = findActiveBooking(checkData, id);
+
+          if (duplicate) {
+            if (user.email) {
+              setBookingCheck({ email: user.email, booking: duplicate });
+            }
+            toast.error(
+              `You already have a ${duplicate.status.toLowerCase()} booking for this studio on ${duplicate.bookingDate}.`
+            );
+            setIsBookingOpen(false);
+            return;
+          }
+        }
+      } catch (error) {
+        console.error("Failed to re-check existing bookings:", error);
+      }
 
       const bookingPayload = { studioId: studio?._id, bookingDate };
 
@@ -370,20 +473,51 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
               </div>
               <Button
                 type="button"
-                disabled={isSessionPending}
+                disabled={
+                  isSessionPending || isCheckingExistingBooking || Boolean(existingBooking)
+                }
                 onClick={() => {
                   if (!user) {
                     toast.error("Please log in to book a studio session.");
                     router.push("/login");
                     return;
                   }
+                  if (existingBooking) {
+                    toast.error(
+                      `You already have a ${existingBooking.status.toLowerCase()} booking for this studio on ${existingBooking.bookingDate}.`
+                    );
+                    return;
+                  }
                   setIsBookingOpen(true);
                 }}
                 className="mt-5 h-12 w-full rounded-xl bg-amber-400 text-sm font-semibold text-zinc-950 hover:bg-amber-300"
               >
-                <Calendar className="mr-2 size-4" />
-                Book Workspace Now
+                {existingBooking ? (
+                  <>
+                    <CheckCircle2 className="mr-2 size-4" />
+                    Already Booked
+                  </>
+                ) : (
+                  <>
+                    <Calendar className="mr-2 size-4" />
+                    {isCheckingExistingBooking
+                      ? "Checking your bookings..."
+                      : "Book Workspace Now"}
+                  </>
+                )}
               </Button>
+              {existingBooking && (
+                <p className="mt-3 text-xs leading-relaxed text-amber-300">
+                  You already have a {existingBooking.status.toLowerCase()} booking for this
+                  studio on {existingBooking.bookingDate}.{" "}
+                  <Link
+                    href="/my-bookings"
+                    className="font-semibold underline underline-offset-2"
+                  >
+                    Manage booking
+                  </Link>
+                </p>
+              )}
             </div>
           </div>
         </div>
