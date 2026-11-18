@@ -11,16 +11,16 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <section className="relative flex min-h-[calc(100vh-5rem)] items-center overflow-hidden bg-[#09090B] px-4 py-16 text-white sm:px-6 lg:px-8">
+    <section className="relative flex min-h-[calc(100vh-5rem)] items-center overflow-hidden bg-background px-4 py-16 text-foreground sm:px-6 lg:px-8">
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-500/[0.07] blur-[140px]" />
 
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div className="relative mx-auto w-full max-w-xl">
-          <div className="absolute -left-3 top-6 z-10 rounded-xl border border-amber-400/30 bg-zinc-950/90 px-4 py-2 shadow-xl shadow-black/30 sm:-left-5">
-            <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500">
+          <div className="absolute -left-3 top-6 z-10 rounded-xl border border-amber-400/30 bg-card px-4 py-2 shadow-xl shadow-black/30 sm:-left-5">
+            <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               StudioSpace
             </span>
-            <span className="mt-0.5 block text-lg font-bold tracking-widest text-amber-300">
+            <span className="mt-0.5 block text-lg font-bold tracking-widest text-amber-700 dark:text-amber-300">
               404
             </span>
           </div>
@@ -79,13 +79,13 @@ export default function NotFound() {
         </div>
 
         <div className="mx-auto max-w-lg text-center lg:mx-0 lg:text-left">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-400">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-600 dark:text-amber-400">
             Out of frame
           </p>
           <h1 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl">
             This page missed its cue.
           </h1>
-          <p className="mx-auto mt-5 max-w-md text-sm leading-7 text-zinc-400 lg:mx-0 sm:text-base">
+          <p className="mx-auto mt-5 max-w-md text-sm leading-7 text-muted-foreground lg:mx-0 sm:text-base">
             We couldn&apos;t find the creative space you were looking for. It may
             have moved, or the link may be out of date.
           </p>

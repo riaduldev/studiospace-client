@@ -261,8 +261,8 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
 
   if (!studio) {
     return (
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-5rem)] bg-[#09090B] text-white">
-        <p className="text-lg font-medium text-zinc-400">Studio not found.</p>
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-5rem)] bg-background text-foreground">
+        <p className="text-lg font-medium text-muted-foreground">Studio not found.</p>
         <Link
           href="/studios"
           className={buttonVariants({
@@ -281,30 +281,31 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
   const currentImage = galleryImages[activeImageIndex % galleryImages.length] || studio.imageUrl;
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-[#09090B] px-4 py-10 sm:px-6 lg:px-8">
+    <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-background px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <Link
           href="/studios"
           className={buttonVariants({
             variant: "ghost",
-            className: "mb-6 text-zinc-400 hover:text-white",
+            className: "mb-6 text-muted-foreground hover:text-foreground",
           })}
         >
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Studios
         </Link>
 
         {/* Studio photo gallery */}
-        <div className="relative h-72 sm:h-[400px] w-full overflow-hidden rounded-3xl border border-white/10 bg-zinc-900">
+        <div className="relative h-80 w-full overflow-hidden rounded-3xl border border-border bg-muted sm:h-[400px]">
           <img src={currentImage} alt={`${studio.title} studio photo ${activeImageIndex + 1}`} className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/20 to-transparent" />
           <div className="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-            <div>
+            <div className="min-w-0">
               <span className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-amber-300 backdrop-blur-md">
                 {studio.category}
               </span>
-              <h1 className="mt-3 break-words text-2xl font-bold text-white sm:text-4xl">{studio.title}</h1>
-              <p className="mt-1 flex min-w-0 items-center gap-1.5 break-words text-sm text-zinc-300">
-                <MapPin className="h-4 w-4 text-amber-400" /> {studio.location}
+              <h1 className="mt-3 line-clamp-2 break-words text-2xl font-bold text-white sm:text-4xl">{studio.title}</h1>
+              <p className="mt-1 flex min-w-0 items-center gap-1.5 text-sm text-zinc-300">
+                <MapPin className="h-4 w-4 shrink-0 text-amber-400" />
+                <span className="truncate">{studio.location}</span>
               </p>
             </div>
             <div className="rounded-2xl border border-white/15 bg-zinc-950/80 p-4 backdrop-blur-xl">
@@ -322,7 +323,7 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
                     (index - 1 + galleryImages.length) % galleryImages.length
                   )
                 }
-                className="absolute left-4 top-1/2 z-20 grid size-10 -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-zinc-950/70 text-white backdrop-blur transition hover:bg-zinc-950"
+                className="absolute left-4 top-1/2 z-20 hidden size-10 -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-zinc-950/70 text-white backdrop-blur transition hover:bg-zinc-950 sm:grid"
               >
                 <ChevronLeft className="size-5" />
               </button>
@@ -332,7 +333,7 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
                 onClick={() =>
                   setActiveImageIndex((index) => (index + 1) % galleryImages.length)
                 }
-                className="absolute right-4 top-1/2 z-20 grid size-10 -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-zinc-950/70 text-white backdrop-blur transition hover:bg-zinc-950"
+                className="absolute right-4 top-1/2 z-20 hidden size-10 -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-zinc-950/70 text-white backdrop-blur transition hover:bg-zinc-950 sm:grid"
               >
                 <ChevronRight className="size-5" />
               </button>
@@ -357,7 +358,7 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
                 className={`h-16 w-24 shrink-0 overflow-hidden rounded-lg border transition ${
                   index === activeImageIndex % galleryImages.length
                     ? "border-amber-400"
-                    : "border-white/10 opacity-60 hover:opacity-100"
+                    : "border-border opacity-60 hover:opacity-100"
                 }`}
               >
                 <img src={image} alt="" className="h-full w-full object-cover" />
@@ -370,38 +371,38 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
         <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-3">
           {/* Left Details */}
           <div className="lg:col-span-2 space-y-8">
-            <div className="grid grid-cols-1 gap-4 rounded-2xl border border-white/[0.08] bg-zinc-950/60 p-5 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 rounded-2xl border border-border bg-card p-5 sm:grid-cols-3">
               <div>
-                <span className="flex items-center gap-1 text-xs text-zinc-500"><ShieldCheck className="h-3.5 w-3.5 text-amber-400" /> Security Deposit</span>
-                <p className="mt-1 text-base font-bold text-white">${studio.securityDeposit}</p>
+                <span className="flex items-center gap-1 text-xs text-muted-foreground"><ShieldCheck className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" /> Security Deposit</span>
+                <p className="mt-1 text-base font-bold text-foreground">${studio.securityDeposit}</p>
               </div>
               <div>
-                <span className="flex items-center gap-1 text-xs text-zinc-500"><Users className="h-3.5 w-3.5 text-amber-400" /> Max Capacity</span>
-                <p className="mt-1 text-base font-bold text-white">{studio.maxCapacity} Crew</p>
+                <span className="flex items-center gap-1 text-xs text-muted-foreground"><Users className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" /> Max Capacity</span>
+                <p className="mt-1 text-base font-bold text-foreground">{studio.maxCapacity} Crew</p>
               </div>
               <div>
-                <span className="flex items-center gap-1 text-xs text-zinc-500"><Star className="h-3.5 w-3.5 text-amber-400" /> Rating</span>
-                <p className="mt-1 text-base font-bold text-white">{studio.rating || "New Studio"}</p>
+                <span className="flex items-center gap-1 text-xs text-muted-foreground"><Star className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" /> Rating</span>
+                <p className="mt-1 text-base font-bold text-foreground">{studio.rating || "New Studio"}</p>
               </div>
             </div>
 
             {/* Overview */}
             {studio.overview && (
               <div className="space-y-3">
-                <h2 className="text-lg font-bold text-white">About This Studio</h2>
-                <p className="text-sm leading-relaxed text-zinc-300 whitespace-pre-line">{studio.overview}</p>
+                <h2 className="text-lg font-bold text-foreground">About This Studio</h2>
+                <p className="text-sm leading-relaxed text-muted-foreground whitespace-pre-line">{studio.overview}</p>
               </div>
             )}
 
             {/* Amenities */}
             {studio.amenities && studio.amenities.length > 0 && (
               <div className="space-y-3">
-                <h2 className="text-lg font-bold text-white">Included Amenities & Equipment</h2>
+                <h2 className="text-lg font-bold text-foreground">Included Amenities & Equipment</h2>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {studio.amenities.map((amenity, idx) => (
-                    <div key={idx} className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] p-3 text-xs text-zinc-300">
-                      <CheckCircle2 className="h-4 w-4 text-amber-400 flex-shrink-0" />
-                      <span>{amenity}</span>
+                    <div key={idx} className="flex items-center gap-2 rounded-xl border border-border bg-muted/40 p-3 text-xs text-muted-foreground">
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+                      <span className="min-w-0 break-words">{amenity}</span>
                     </div>
                   ))}
                 </div>
@@ -409,18 +410,18 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
             )}
 
             {/* Host Info */}
-            <div className="rounded-2xl border border-white/[0.08] bg-zinc-950/60 p-5">
-              <span className="text-xs uppercase tracking-wider text-zinc-500">Hosted By</span>
-              <p className="mt-1 text-base font-bold text-white">{studio.ownerName}</p>
-              <p className="break-all text-xs text-zinc-400">{studio.ownerEmail}</p>
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <span className="text-xs uppercase tracking-wider text-muted-foreground">Hosted By</span>
+              <p className="mt-1 text-base font-bold text-foreground">{studio.ownerName}</p>
+              <p className="break-all text-xs text-muted-foreground">{studio.ownerEmail}</p>
             </div>
 
             <section className="space-y-4" aria-labelledby="studio-reviews-heading">
               <div className="flex items-center justify-between gap-3">
-                <h2 id="studio-reviews-heading" className="text-lg font-bold text-white">
+                <h2 id="studio-reviews-heading" className="text-lg font-bold text-foreground">
                   Creator Reviews
                 </h2>
-                <span className="flex items-center gap-1 text-sm font-semibold text-amber-400">
+                <span className="flex shrink-0 items-center gap-1 text-sm font-semibold text-amber-600 dark:text-amber-400">
                   <Star className="size-4 fill-current" />
                   {typeof studio.rating === "number" && studio.rating > 0
                     ? studio.rating.toFixed(1)
@@ -432,23 +433,23 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
                   {studio.reviews.map((review, index) => (
                     <article
                       key={review._id ?? `${review.reviewerName}-${index}`}
-                      className="rounded-2xl border border-white/[0.08] bg-zinc-950/60 p-5"
+                      className="rounded-2xl border border-border bg-card p-5"
                     >
                       <div className="flex items-center justify-between gap-4">
-                        <p className="min-w-0 break-words font-semibold text-zinc-200">
+                        <p className="min-w-0 break-words font-semibold text-foreground">
                           {review.reviewerName || "StudioSpace creator"}
                         </p>
-                        <span className="flex items-center gap-1 text-sm text-amber-400">
+                        <span className="flex items-center gap-1 text-sm text-amber-600 dark:text-amber-400">
                           <Star className="size-3.5 fill-current" />
                           {review.rating}
                         </span>
                       </div>
-                      <p className="mt-2 text-sm leading-relaxed text-zinc-400">{review.comment}</p>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{review.comment}</p>
                     </article>
                   ))}
                 </div>
               ) : (
-                <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-5 text-sm text-zinc-500">
+                <div className="rounded-2xl border border-dashed border-border bg-muted/40 p-5 text-sm text-muted-foreground">
                   No reviews yet. Book a session and be among the first to share feedback.
                 </div>
               )}
@@ -457,17 +458,17 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
 
           {/* Booking call to action */}
           <div className="lg:col-span-1">
-            <div className="rounded-3xl border border-white/10 bg-zinc-950/90 p-6 shadow-2xl backdrop-blur-2xl lg:sticky lg:top-24">
-              <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">
+            <div className="rounded-3xl border border-border bg-card p-6 shadow-2xl backdrop-blur-2xl lg:sticky lg:top-24">
+              <span className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
                 Reserve this space
               </span>
-              <h2 className="mt-2 text-xl font-bold text-white">{studio.title}</h2>
-              <p className="mt-2 text-sm text-zinc-400">
+              <h2 className="mt-2 text-xl font-bold text-foreground">{studio.title}</h2>
+              <p className="mt-2 text-sm text-muted-foreground">
                 ${studio.hourlyRate}/hour · Four-hour session estimate
               </p>
-              <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4 text-sm">
-                <span className="text-zinc-400">Estimated total</span>
-                <span className="font-bold text-amber-400">
+              <div className="mt-5 flex items-center justify-between border-t border-border pt-4 text-sm">
+                <span className="text-muted-foreground">Estimated total</span>
+                <span className="font-bold text-amber-600 dark:text-amber-400">
                   ${(studio.hourlyRate * 4) + studio.securityDeposit}
                 </span>
               </div>
@@ -507,7 +508,7 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
                 )}
               </Button>
               {existingBooking && (
-                <p className="mt-3 text-xs leading-relaxed text-amber-300">
+                <p className="mt-3 text-xs leading-relaxed text-amber-700 dark:text-amber-300">
                   You already have a {existingBooking.status.toLowerCase()} booking for this
                   studio on {existingBooking.bookingDate}.{" "}
                   <Link
@@ -524,44 +525,44 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
       </div>
 
       <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
-        <DialogContent className="max-w-[calc(100%-2rem)] border border-white/10 bg-zinc-950 p-6 text-white sm:max-w-lg">
+        <DialogContent className="max-w-[calc(100%-2rem)] border border-border bg-card p-6 text-foreground sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-white">
+            <DialogTitle className="text-xl font-bold text-foreground">
               Book Workspace Now
             </DialogTitle>
-            <DialogDescription className="text-zinc-400">
+            <DialogDescription className="text-muted-foreground">
               Choose a date to request a four-hour session at {studio.title}.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleBookingSubmit} className="space-y-5">
             <div className="space-y-1.5">
-              <Label htmlFor="bookingDate" className="text-xs font-medium text-zinc-300">
+              <Label htmlFor="bookingDate" className="text-xs font-medium text-muted-foreground">
                 Booking Date *
               </Label>
               <div className="relative">
-                <Calendar className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-zinc-500" />
+                <Calendar className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="bookingDate"
                   type="date"
                   required
                   value={bookingDate}
                   onChange={(event) => setBookingDate(event.target.value)}
-                  className="h-11 rounded-xl border-white/10 bg-white/[0.03] pl-10 text-sm text-white"
+                  className="h-11 rounded-xl border-border bg-muted/60 pl-10 text-sm text-foreground"
                 />
               </div>
             </div>
-            <div className="space-y-2 rounded-xl border border-white/10 bg-white/[0.02] p-4 text-sm">
-              <div className="flex justify-between gap-3 text-zinc-400">
+            <div className="space-y-2 rounded-xl border border-border bg-muted/40 p-4 text-sm">
+              <div className="flex justify-between gap-3 text-muted-foreground">
                 <span className="min-w-0">Four hours at ${studio.hourlyRate}/hr</span>
                 <span className="shrink-0">${studio.hourlyRate * 4}</span>
               </div>
-              <div className="flex justify-between gap-3 text-zinc-400">
+              <div className="flex justify-between gap-3 text-muted-foreground">
                 <span className="min-w-0">Refundable security deposit</span>
                 <span className="shrink-0">${studio.securityDeposit}</span>
               </div>
-              <div className="flex justify-between gap-3 border-t border-white/10 pt-3 font-semibold text-white">
+              <div className="flex justify-between gap-3 border-t border-border pt-3 font-semibold text-foreground">
                 <span>Estimated total</span>
-                <span className="text-amber-400">
+                <span className="text-amber-600 dark:text-amber-400">
                   ${(studio.hourlyRate * 4) + studio.securityDeposit}
                 </span>
               </div>

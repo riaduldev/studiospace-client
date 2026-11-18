@@ -69,13 +69,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-[calc(100vh-5rem)] items-center justify-center overflow-hidden bg-[#09090B] px-4 py-12 sm:px-6">
-      <div className="relative z-10 w-full max-w-md rounded-3xl border border-white/[0.1] bg-zinc-950/85 p-6 shadow-2xl backdrop-blur-2xl sm:p-8">
+    <div className="relative flex min-h-[calc(100vh-5rem)] items-center justify-center overflow-hidden bg-background px-4 py-12 sm:px-6">
+      <div className="relative z-10 w-full max-w-md rounded-3xl border border-border bg-card p-6 shadow-2xl backdrop-blur-2xl sm:p-8">
         <div className="mb-7 text-center">
-          <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
             Welcome Back
           </h1>
-          <p className="mt-1.5 text-sm text-zinc-400">
+          <p className="mt-1.5 text-sm text-muted-foreground">
             Log in to manage your studios and bookings.
           </p>
         </div>
@@ -83,9 +83,9 @@ export default function LoginPage() {
         {formError && (
           <div
             role="alert"
-            className="mb-5 flex items-start gap-2.5 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3.5 text-xs text-rose-300"
+            className="mb-5 flex items-start gap-2.5 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3.5 text-xs text-rose-700 dark:text-rose-300"
           >
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-400" />
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
             <p className="leading-relaxed">{formError}</p>
           </div>
         )}
@@ -95,30 +95,30 @@ export default function LoginPage() {
           variant="outline"
           disabled={isGoogleLoading || isSubmitting}
           onClick={handleGoogleSignIn}
-          className="h-11 w-full rounded-xl border-white/15 bg-white/[0.04] text-sm font-medium text-zinc-100 hover:bg-white/[0.08]"
+          className="h-11 w-full rounded-xl border-border bg-muted/60 text-sm font-medium text-foreground hover:bg-muted"
         >
           {isGoogleLoading ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin text-amber-400" />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin text-amber-600 dark:text-amber-400" />
           ) : (
             "Continue with Google"
           )}
         </Button>
 
         <div className="my-6 flex items-center gap-3">
-          <div className="h-px flex-1 bg-white/[0.08]" />
-          <span className="text-[11px] font-medium uppercase tracking-widest text-zinc-500">
+          <div className="h-px flex-1 bg-muted" />
+          <span className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground">
             or email
           </span>
-          <div className="h-px flex-1 bg-white/[0.08]" />
+          <div className="h-px flex-1 bg-muted" />
         </div>
 
         <form onSubmit={handleEmailSignIn} className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="login-email" className="text-xs font-medium text-zinc-300">
+            <Label htmlFor="login-email" className="text-xs font-medium text-muted-foreground">
               Email Address
             </Label>
             <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+              <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 id="login-email"
                 type="email"
@@ -127,17 +127,17 @@ export default function LoginPage() {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                className="h-11 rounded-xl bg-white/[0.03] pl-10 text-sm text-white"
+                className="h-11 rounded-xl bg-muted/60 pl-10 text-sm text-foreground"
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="login-password" className="text-xs font-medium text-zinc-300">
+            <Label htmlFor="login-password" className="text-xs font-medium text-muted-foreground">
               Password
             </Label>
             <div className="relative">
-              <Lock className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+              <Lock className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 id="login-password"
                 type={showPassword ? "text" : "password"}
@@ -146,13 +146,13 @@ export default function LoginPage() {
                 placeholder="Your password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                className="h-11 rounded-xl bg-white/[0.03] pl-10 pr-10 text-sm text-white"
+                className="h-11 rounded-xl bg-muted/60 pl-10 pr-10 text-sm text-foreground"
               />
               <button
                 type="button"
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 onClick={() => setShowPassword((visible) => !visible)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -172,9 +172,9 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-zinc-400">
+        <p className="mt-6 text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-amber-400 underline">
+          <Link href="/register" className="text-amber-600 dark:text-amber-400 underline">
             Register here
           </Link>
         </p>

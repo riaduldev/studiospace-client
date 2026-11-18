@@ -103,12 +103,12 @@ export default function MyListingsPage() {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
+    <div className="relative min-h-[calc(100vh-5rem)] bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col gap-4 border-b border-white/[0.08] pb-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-white">My Studio Listings</h1>
-            <p className="mt-1 text-sm text-zinc-400">Manage, update, or remove your published creative spaces.</p>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">My Studio Listings</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Manage, update, or remove your published creative spaces.</p>
           </div>
           <Link
             href="/add-studio"
@@ -128,7 +128,7 @@ export default function MyListingsPage() {
           />
         ) : !userEmail ? (
           <div className="mt-20 text-center">
-            <p className="text-lg font-medium text-zinc-300">Log in to manage your studio listings.</p>
+            <p className="text-lg font-medium text-muted-foreground">Log in to manage your studio listings.</p>
             <Link
               href="/login"
               className={buttonVariants({
@@ -140,8 +140,8 @@ export default function MyListingsPage() {
           </div>
         ) : studios.length === 0 ? (
           <div className="mt-20 text-center">
-            <Building2 className="mx-auto h-12 w-12 text-zinc-600" />
-            <p className="mt-4 text-lg font-medium text-zinc-300">You haven&apos;t listed any studios yet.</p>
+            <Building2 className="mx-auto h-12 w-12 text-muted-foreground" />
+            <p className="mt-4 text-lg font-medium text-muted-foreground">You haven&apos;t listed any studios yet.</p>
             <Link
               href="/add-studio"
               className={buttonVariants({
@@ -154,34 +154,35 @@ export default function MyListingsPage() {
         ) : (
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {studios.map((studio) => (
-              <div key={studio._id} className="overflow-hidden rounded-2xl border border-white/[0.08] bg-zinc-950/80 p-4">
-                <div className="relative h-40 w-full overflow-hidden rounded-xl bg-zinc-900">
+              <div key={studio._id} className="overflow-hidden rounded-2xl border border-border bg-card p-4">
+                <div className="relative h-40 w-full overflow-hidden rounded-xl bg-muted">
                   <img src={studio.imageUrl} alt={studio.title} className="h-full w-full object-cover" />
                 </div>
                 <div className="mt-4">
-                  <span className="text-[11px] font-medium uppercase tracking-wider text-amber-400">{studio.category}</span>
-                  <h3 className="mt-1 text-base font-bold text-white truncate">{studio.title}</h3>
-                  <p className="mt-1 flex items-center gap-1 text-xs text-zinc-400">
-                    <MapPin className="h-3 w-3" /> {studio.location}
+                  <span className="text-[11px] font-medium uppercase tracking-wider text-amber-600 dark:text-amber-400">{studio.category}</span>
+                  <h3 className="mt-1 text-base font-bold text-foreground truncate">{studio.title}</h3>
+                  <p className="mt-1 flex min-w-0 items-center gap-1 text-xs text-muted-foreground">
+                    <MapPin className="h-3 w-3 shrink-0" />
+                    <span className="truncate">{studio.location}</span>
                   </p>
-                  <p className="mt-2 text-sm font-semibold text-white">${studio.hourlyRate}/hr</p>
+                  <p className="mt-2 text-sm font-semibold text-foreground">${studio.hourlyRate}/hr</p>
                 </div>
 
-                <div className="mt-5 flex items-center gap-2 border-t border-white/[0.06] pt-4">
+                <div className="mt-5 flex items-center gap-2 border-t border-border pt-4">
                   <Link
                     href={`/studios/edit/${studio._id}`}
                     className={buttonVariants({
                       variant: "outline",
                       className:
-                        "flex-1 rounded-xl border-white/15 bg-white/[0.03] text-xs text-zinc-200 hover:bg-white/[0.08]",
+                        "flex-1 rounded-xl border-border bg-muted/60 text-xs text-foreground hover:bg-muted",
                     })}
                   >
-                    <Edit className="mr-1.5 h-3.5 w-3.5 text-amber-400" /> Update
+                    <Edit className="mr-1.5 h-3.5 w-3.5 text-amber-600 dark:text-amber-400" /> Update
                   </Link>
                   <Button
                     onClick={() => setStudioToDelete(studio)}
                     disabled={deletingStudioId !== null}
-                    className="flex-1 rounded-xl bg-rose-500/10 text-xs font-medium text-rose-400 hover:bg-rose-500/20"
+                    className="flex-1 rounded-xl bg-rose-500/10 text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-500/20"
                   >
                     <Trash2 className="mr-1.5 h-3.5 w-3.5" /> Delete
                   </Button>
@@ -197,19 +198,19 @@ export default function MyListingsPage() {
           if (!open && deletingStudioId === null) setStudioToDelete(null);
         }}
       >
-        <AlertDialogContent className="border-white/10 bg-zinc-950 text-white">
+        <AlertDialogContent className="border-border bg-card text-foreground">
           <AlertDialogHeader>
-            <AlertDialogMedia className="bg-rose-500/10 text-rose-400">
+            <AlertDialogMedia className="bg-rose-500/10 text-rose-600 dark:text-rose-400">
               <TriangleAlert aria-hidden="true" />
             </AlertDialogMedia>
-            <AlertDialogTitle className="text-white">Delete studio listing?</AlertDialogTitle>
-            <AlertDialogDescription className="text-zinc-400">
+            <AlertDialogTitle className="text-foreground">Delete studio listing?</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground">
               {studioToDelete
                 ? `“${studioToDelete.title}” will be permanently removed. This action cannot be undone.`
                 : "This listing will be permanently removed."}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="border-white/10 bg-white/[0.02]">
+          <AlertDialogFooter className="border-border bg-muted/40">
             <AlertDialogCancel disabled={deletingStudioId !== null}>
               Keep listing
             </AlertDialogCancel>

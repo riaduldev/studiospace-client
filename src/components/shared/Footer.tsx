@@ -40,7 +40,7 @@ const LEGAL_LINKS = [
 function StudioApertureLogo() {
   return (
     <Link href="/" className="group inline-flex items-center gap-3 focus:outline-none">
-      <div className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-gradient-to-b from-zinc-800/90 to-zinc-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_4px_14px_rgba(0,0,0,0.6)] transition-all duration-500 group-hover:border-amber-400/50 group-hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_0_22px_rgba(245,158,11,0.3)]">
+      <div className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-gradient-to-b from-zinc-800/90 to-zinc-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_4px_14px_rgba(0,0,0,0.6)] transition-all duration-500 group-hover:border-amber-400/50 group-hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_0_22px_rgba(245,158,11,0.3)]">
         <div className="pointer-events-none absolute -top-2 h-4 w-7 rounded-full bg-amber-400/35 blur-md opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
 
         <svg
@@ -81,13 +81,13 @@ function StudioApertureLogo() {
       </div>
 
       <div className="flex flex-col">
-        <div className="flex items-center gap-0.5 text-lg font-bold tracking-tight text-white">
+        <div className="flex items-center gap-0.5 text-lg font-bold tracking-tight text-foreground">
           <span>Studio</span>
-          <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-orange-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-amber-700 via-amber-600 to-orange-700 bg-clip-text text-transparent dark:from-amber-300 dark:via-amber-400 dark:to-orange-400">
             Space
           </span>
         </div>
-        <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-500 transition-colors group-hover:text-zinc-400">
+        <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground transition-colors group-hover:text-foreground">
           Creative Stages
         </span>
       </div>
@@ -123,7 +123,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative overflow-hidden border-t border-white/[0.08] bg-[#09090B] text-zinc-300">
+    <footer className="relative overflow-hidden border-t border-border bg-background text-muted-foreground">
       {/* Top Specular Amber Hairline & Ambient Glow */}
       <div className="pointer-events-none absolute inset-x-1/4 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-amber-400/60 to-transparent" />
       <div className="pointer-events-none absolute -top-32 left-1/2 h-64 w-[680px] -translate-x-1/2 rounded-full bg-amber-500/[0.06] blur-[120px]" />
@@ -135,14 +135,14 @@ export function Footer() {
           <div className="space-y-5 lg:col-span-4">
             <StudioApertureLogo />
 
-            <p className="max-w-sm text-sm leading-relaxed text-zinc-400">
+            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
               Curated cinema soundstages, acoustic recording suites, and
               daylight cyclorama lofts—engineered for directors, photographers,
               and independent creators to book on demand.
             </p>
 
             {/* Live Stage Network Pill */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-xs text-zinc-300">
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/60 px-3 py-1.5 text-xs text-muted-foreground">
               <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34D399]" />
               <span>680+ Verified Stages Active Worldwide</span>
             </div>
@@ -155,7 +155,7 @@ export function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Follow StudioSpace on X"
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-zinc-400 transition-all hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-300"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-muted/60 text-muted-foreground transition-all hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-700 dark:hover:text-amber-300"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -173,7 +173,7 @@ export function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Follow StudioSpace on Instagram"
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-zinc-400 transition-all hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-300"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-muted/60 text-muted-foreground transition-all hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-700 dark:hover:text-amber-300"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -196,7 +196,7 @@ export function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Subscribe to StudioSpace on YouTube"
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-zinc-400 transition-all hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-300"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-muted/60 text-muted-foreground transition-all hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-700 dark:hover:text-amber-300"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -213,7 +213,7 @@ export function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Connect with StudioSpace on LinkedIn"
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-zinc-400 transition-all hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-300"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-muted/60 text-muted-foreground transition-all hover:border-amber-400/40 hover:bg-amber-400/10 hover:text-amber-700 dark:hover:text-amber-300"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -228,7 +228,7 @@ export function Footer() {
 
           {/* Column 2: Quick Navigation Links (2 cols) */}
           <div className="lg:col-span-2">
-            <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-white">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-foreground">
               Navigation
             </h3>
             <ul className="mt-4 space-y-2.5">
@@ -236,7 +236,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="group inline-flex items-center text-sm text-zinc-400 transition-colors hover:text-amber-300"
+                    className="group inline-flex items-center text-sm text-muted-foreground transition-colors hover:text-amber-700 dark:hover:text-amber-300"
                   >
                     <span className="mr-0 h-1 w-0 rounded-full bg-amber-400 transition-all duration-300 group-hover:mr-2 group-hover:w-2" />
                     {link.label}
@@ -248,7 +248,7 @@ export function Footer() {
 
           {/* Column 3: Popular Studio Categories (3 cols) */}
           <div className="lg:col-span-3">
-            <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-white">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-foreground">
               Popular Categories
             </h3>
             <ul className="mt-4 space-y-2.5">
@@ -256,12 +256,12 @@ export function Footer() {
                 <li key={category.label}>
                   <Link
                     href={category.href}
-                    className="group flex items-center justify-between rounded-lg py-0.5 text-sm text-zinc-400 transition-colors hover:text-white"
+                    className="group flex items-center justify-between rounded-lg py-0.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    <span className="transition-colors group-hover:text-amber-300">
+                    <span className="transition-colors group-hover:text-amber-700 dark:group-hover:text-amber-300">
                       {category.label}
                     </span>
-                    <span className="rounded-md border border-white/[0.07] bg-white/[0.03] px-1.5 py-0.5 text-[11px] font-medium text-zinc-500 transition-colors group-hover:border-amber-400/30 group-hover:text-amber-300">
+                    <span className="rounded-md border border-border bg-muted/60 px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground transition-colors group-hover:border-amber-400/30 group-hover:text-amber-700 dark:group-hover:text-amber-300">
                       {category.count}
                     </span>
                   </Link>
@@ -272,23 +272,23 @@ export function Footer() {
 
           {/* Column 4: Stage Dispatch Newsletter Card (3 cols) */}
           <div className="lg:col-span-3">
-            <div className="relative overflow-hidden rounded-2xl border border-white/[0.1] bg-gradient-to-b from-white/[0.05] to-white/[0.02] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-300">
+            <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-b from-muted/60 to-muted/20 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-300">
                 <Sparkles className="h-3 w-3" />
                 Stage Dispatch
               </div>
 
-              <h3 className="mt-3 text-base font-semibold text-white">
+              <h3 className="mt-3 text-base font-semibold text-foreground">
                 New Stages &amp; Off-Peak Rates
               </h3>
-              <p className="mt-1 text-xs leading-relaxed text-zinc-400">
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                 Get weekly drops on newly verified soundstages and last-minute
                 production slots.
               </p>
 
               <form onSubmit={handleSubscribe} noValidate className="mt-4 space-y-2.5">
                 <div className="relative">
-                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     type="email"
                     placeholder="producer@studio.com"
@@ -297,7 +297,7 @@ export function Footer() {
                       setEmail(e.target.value);
                       if (subscribed) setSubscribed(false);
                     }}
-                    className="h-10 rounded-xl border-white/10 bg-zinc-950/80 pl-9 text-xs text-white placeholder:text-zinc-500 focus-visible:border-amber-400/60 focus-visible:ring-amber-400/20"
+                    className="h-10 rounded-xl border-border bg-card pl-9 text-xs text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/30"
                   />
                 </div>
 
@@ -326,7 +326,7 @@ export function Footer() {
         </div>
 
         {/* Bottom Copyright & Legal Bar */}
-        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/[0.08] pt-8 text-xs text-zinc-500 sm:flex-row">
+        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-xs text-muted-foreground sm:flex-row">
           <p>
             &copy; {new Date().getFullYear()} StudioSpace Inc. All rights
             reserved. Built for creators &amp; production teams.
@@ -337,7 +337,7 @@ export function Footer() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="transition-colors hover:text-zinc-300"
+                className="transition-colors hover:text-foreground"
               >
                 {item.label}
               </Link>

@@ -5,7 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Footer } from "@/components/shared/Footer";
-import { Toaster } from "sonner";
+import { ThemeToaster } from "@/components/shared/theme-toaster";
 
 
 const jakarta = Plus_Jakarta_Sans({
@@ -54,7 +54,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <Navbar />
           <main className="flex-1">{children}</main>
           <Footer />
-          <Toaster position="top-right" theme="system" richColors closeButton />
+          <ThemeToaster />
         </ThemeProvider>
       </body>
     </html>

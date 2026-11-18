@@ -110,10 +110,10 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#09090B] text-white">
+    <div className="min-h-screen overflow-x-clip bg-background text-foreground">
 
       {/* 1. HERO SLIDER SECTION */}
-      <section className="relative h-[85vh] w-full overflow-hidden bg-zinc-950">
+      <section className="relative h-[85svh] min-h-[560px] w-full overflow-hidden bg-card">
         {HERO_SLIDES.map((slide, index) => (
           <div
             key={index}
@@ -130,7 +130,7 @@ export default function HomePage() {
                   <Sparkles className="h-3.5 w-3.5" />
                   <span>The Ultimate Creator Network</span>
                 </div>
-                <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl text-white">
+                <h1 className="text-balance text-4xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
                   {slide.title}
                 </h1>
                 <p className="mx-auto max-w-2xl text-base text-zinc-300 sm:text-lg">
@@ -178,10 +178,10 @@ export default function HomePage() {
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">Curated Spaces</span>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl text-white">Browse by Category</h2>
+            <span className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">Curated Spaces</span>
+            <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl text-foreground">Browse by Category</h2>
           </div>
-          <Link href="/studios" className="mt-4 md:mt-0 flex items-center gap-1.5 text-sm font-semibold text-amber-400 hover:text-amber-300">
+          <Link href="/studios" className="mt-4 md:mt-0 flex items-center gap-1.5 text-sm font-semibold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300">
             View All Categories <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -193,14 +193,14 @@ export default function HomePage() {
               <Link
                 key={idx}
                 href={`/studios?category=${encodeURIComponent(cat.name)}`}
-                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.08] bg-zinc-950/85 p-6 transition-all hover:border-amber-400/50 hover:bg-amber-400/[0.03] hover:shadow-[0_10px_30px_rgba(245,158,11,0.1)]"
+                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all hover:border-amber-400/50 hover:bg-amber-400/[0.03] hover:shadow-[0_10px_30px_rgba(245,158,11,0.1)] sm:p-6"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-amber-400 group-hover:bg-amber-400 group-hover:text-zinc-950 transition-colors">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-muted/60 text-amber-600 dark:text-amber-400 group-hover:bg-amber-400 group-hover:text-zinc-950 transition-colors">
                   <IconComponent className="h-6 w-6" />
                 </div>
                 <div className="mt-8">
-                  <h3 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors">{cat.name}</h3>
-                  <p className="mt-1 text-xs text-zinc-500">{cat.count}</p>
+                  <h3 className="text-base font-bold text-foreground group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">{cat.name}</h3>
+                  <p className="mt-1 text-xs text-muted-foreground">{cat.count}</p>
                 </div>
               </Link>
             );
@@ -209,18 +209,18 @@ export default function HomePage() {
       </section>
 
       {/* 3. FEATURED STUDIOS SECTION (Dynamic .limit(6)) */}
-      <section className="border-t border-white/[0.08] bg-zinc-950/40 py-20">
+      <section className="border-t border-border bg-card/40 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-10">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">Featured Stages</span>
-              <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl text-white">Top Rated &amp; Newest Studios</h2>
+              <span className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">Featured Stages</span>
+              <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl text-foreground">Top Rated &amp; Newest Studios</h2>
             </div>
             <Link
               href="/studios"
               className={buttonVariants({
                 variant: "ghost",
-                className: "mt-4 md:mt-0 text-amber-400 hover:text-amber-300 hover:bg-transparent",
+                className: "mt-4 md:mt-0 text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 hover:bg-transparent",
               })}
             >
               Explore All Studios <ArrowRight className="ml-1.5 h-4 w-4" />
@@ -230,9 +230,9 @@ export default function HomePage() {
           {loading ? (
             <StudioCardSkeletonGrid count={3} />
           ) : featuredStudios.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-zinc-950 p-12 text-center">
-              <Building2 className="mx-auto h-12 w-12 text-zinc-600" />
-              <p className="mt-4 text-base font-medium text-zinc-300">No studios listed yet.</p>
+            <div className="rounded-2xl border border-border bg-card p-12 text-center">
+              <Building2 className="mx-auto h-12 w-12 text-muted-foreground" />
+              <p className="mt-4 text-base font-medium text-muted-foreground">No studios listed yet.</p>
               <Link
                 href="/add-studio"
                 className={buttonVariants({
@@ -247,9 +247,9 @@ export default function HomePage() {
               {featuredStudios.map((studio) => (
                 <div
                   key={studio._id}
-                  className="group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-zinc-950 transition-all duration-300 hover:border-amber-400/40 hover:shadow-[0_15px_40px_rgba(0,0,0,0.8)]"
+                  className="group relative overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:border-amber-400/40 hover:shadow-xl"
                 >
-                  <div className="relative h-56 w-full overflow-hidden bg-zinc-900">
+                  <div className="relative h-56 w-full overflow-hidden bg-muted">
                     <img
                       src={studio.imageUrl}
                       alt={studio.title}
@@ -261,26 +261,26 @@ export default function HomePage() {
                   </div>
 
                   <div className="p-5">
-                    <div className="flex items-center justify-between text-xs text-zinc-400">
-                      <span className="flex items-center gap-1 truncate max-w-[180px]">
-                        <MapPin className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
-                        {studio.location}
+                    <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+                      <span className="flex min-w-0 items-center gap-1">
+                        <MapPin className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                        <span className="truncate">{studio.location}</span>
                       </span>
-                      <span className="flex items-center gap-1 font-semibold text-amber-400">
-                        <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                      <span className="flex shrink-0 items-center gap-1 font-semibold text-amber-600 dark:text-amber-400">
+                        <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-600 dark:text-amber-400" />
                         {studio.rating || "5.0"}
                       </span>
                     </div>
 
-                    <h3 className="mt-2 text-lg font-bold text-white group-hover:text-amber-300 transition-colors truncate">
+                    <h3 className="mt-2 line-clamp-2 text-lg font-bold text-foreground transition-colors group-hover:text-amber-700 dark:group-hover:text-amber-300">
                       {studio.title}
                     </h3>
 
-                    <div className="mt-5 flex items-center justify-between border-t border-white/[0.06] pt-4">
+                    <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
                       <div>
-                        <span className="text-[11px] text-zinc-500 uppercase tracking-wider">Rate</span>
-                        <p className="text-base font-bold text-white">
-                          ${studio.hourlyRate} <span className="text-xs font-normal text-zinc-400">/ hr</span>
+                        <span className="text-[11px] text-muted-foreground uppercase tracking-wider">Rate</span>
+                        <p className="text-base font-bold text-foreground">
+                          ${studio.hourlyRate} <span className="text-xs font-normal text-muted-foreground">/ hr</span>
                         </p>
                       </div>
 
@@ -288,7 +288,7 @@ export default function HomePage() {
                         href={`/studios/${studio._id}`}
                         className={buttonVariants({
                           className:
-                            "rounded-xl bg-white/[0.08] text-xs font-semibold text-white hover:bg-amber-400 hover:text-zinc-950",
+                            "rounded-xl bg-muted text-xs font-semibold text-foreground hover:bg-amber-400 hover:text-zinc-950",
                         })}
                       >
                         View Details <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
@@ -303,11 +303,11 @@ export default function HomePage() {
       </section>
 
       {/* 4. EXTRA SECTION 1: HOW BOOKING WORKS (4-STEP WORKFLOW) */}
-      <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 border-t border-white/[0.08]">
+      <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 border-t border-border">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">Seamless Process</span>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">How Booking Works</h2>
-          <p className="mt-2 text-sm text-zinc-400">Book professional creative spaces in 4 simple steps.</p>
+          <span className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">Seamless Process</span>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">How Booking Works</h2>
+          <p className="mt-2 text-sm text-muted-foreground">Book professional creative spaces in 4 simple steps.</p>
         </div>
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -319,13 +319,13 @@ export default function HomePage() {
           ].map((item, idx) => {
             const IconComp = item.icon;
             return (
-              <div key={idx} className="relative rounded-3xl border border-white/[0.08] bg-zinc-950/80 p-8">
-                <span className="absolute right-6 top-6 text-2xl font-black text-white/10">{item.step}</span>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-amber-400/30 bg-amber-400/10 text-amber-300">
+              <div key={idx} className="relative rounded-3xl border border-border bg-card p-8">
+                <span className="absolute right-6 top-6 text-2xl font-black text-foreground/10">{item.step}</span>
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-amber-400/30 bg-amber-400/10 text-amber-700 dark:text-amber-300">
                   <IconComp className="h-6 w-6" />
                 </div>
-                <h3 className="mt-6 text-lg font-bold text-white">{item.title}</h3>
-                <p className="mt-2 text-xs leading-relaxed text-zinc-400">{item.desc}</p>
+                <h3 className="mt-6 text-lg font-bold text-foreground">{item.title}</h3>
+                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{item.desc}</p>
               </div>
             );
           })}
@@ -333,18 +333,18 @@ export default function HomePage() {
       </section>
 
       {/* 5. EXTRA SECTION 2: HOST GUARANTEE & CREATOR SUPPORT */}
-      <section className="border-t border-white/[0.08] bg-gradient-to-b from-zinc-950/40 to-[#09090B] py-24">
+      <section className="border-t border-border bg-gradient-to-b from-muted/40 to-background py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-amber-300">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-amber-700 dark:text-amber-300">
                 <ShieldCheck className="h-3 w-3" />
                 <span>Enterprise Grade Security</span>
               </div>
-              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
                 Host Guarantee &amp; Creator Support
               </h2>
-              <p className="text-sm text-zinc-300 leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 We safeguard every booking with comprehensive liability protection, rigorously verified host profiles, and 24/7 dedicated production assistance.
               </p>
 
@@ -356,27 +356,27 @@ export default function HomePage() {
                   "24/7 dedicated VIP host support for live productions."
                 ].map((text, idx) => (
                   <div key={idx} className="flex items-center gap-3">
-                    <CheckCircle className="h-5 w-5 text-amber-400 shrink-0" />
-                    <span className="text-sm text-zinc-200">{text}</span>
+                    <CheckCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0" />
+                    <span className="text-sm text-foreground">{text}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-3xl border border-white/10 bg-zinc-950 p-6 flex flex-col justify-between">
-                <ShieldCheck className="h-8 w-8 text-amber-400 mb-8" />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="flex flex-col justify-between rounded-3xl border border-border bg-card p-6">
+                <ShieldCheck className="h-8 w-8 text-amber-600 dark:text-amber-400 mb-8" />
                 <div>
-                  <h4 className="text-xl font-bold text-white">$1M+</h4>
-                  <p className="text-xs text-zinc-400 mt-1">Liability Protection on all active sessions.</p>
+                  <h4 className="text-xl font-bold text-foreground">$1M+</h4>
+                  <p className="text-xs text-muted-foreground mt-1">Liability Protection on all active sessions.</p>
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-white/10 bg-zinc-950 p-6 flex flex-col justify-between mt-6">
-                <Headphones className="h-8 w-8 text-amber-400 mb-8" />
+              <div className="flex flex-col justify-between rounded-3xl border border-border bg-card p-6 sm:mt-6">
+                <Headphones className="h-8 w-8 text-amber-600 dark:text-amber-400 mb-8" />
                 <div>
-                  <h4 className="text-xl font-bold text-white">24/7 Support</h4>
-                  <p className="text-xs text-zinc-400 mt-1">Direct hotline for directors &amp; studio owners.</p>
+                  <h4 className="text-xl font-bold text-foreground">24/7 Support</h4>
+                  <p className="text-xs text-muted-foreground mt-1">Direct hotline for directors &amp; studio owners.</p>
                 </div>
               </div>
             </div>

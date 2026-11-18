@@ -143,21 +143,21 @@ export default function RegisterPage() {
   })();
 
   return (
-    <div className="relative flex min-h-[calc(100vh-5rem)] items-center justify-center overflow-hidden bg-[#09090B] px-4 py-12 sm:px-6">
-      <div className="relative z-10 w-full max-w-md rounded-3xl border border-white/[0.1] bg-zinc-950/85 p-6 shadow-2xl backdrop-blur-2xl sm:p-8">
+    <div className="relative flex min-h-[calc(100vh-5rem)] items-center justify-center overflow-hidden bg-background px-4 py-12 sm:px-6">
+      <div className="relative z-10 w-full max-w-md rounded-3xl border border-border bg-card p-6 shadow-2xl backdrop-blur-2xl sm:p-8">
         
         <div className="mb-7 text-center">
-          <div className="mx-auto mb-3 inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-amber-300">
+          <div className="mx-auto mb-3 inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-amber-700 dark:text-amber-300">
             <Camera className="h-3 w-3" />
             <span>StudioSpace Access</span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">Create Your Account</h1>
-          <p className="mt-1.5 text-sm text-zinc-400">Join to book or list your creative studios.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Create Your Account</h1>
+          <p className="mt-1.5 text-sm text-muted-foreground">Join to book or list your creative studios.</p>
         </div>
 
         {formError && (
-          <div role="alert" className="mb-5 flex items-start gap-2.5 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3.5 text-xs text-rose-300">
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-400" />
+          <div role="alert" className="mb-5 flex items-start gap-2.5 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3.5 text-xs text-rose-700 dark:text-rose-300">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
             <p className="leading-relaxed">{formError}</p>
           </div>
         )}
@@ -168,39 +168,39 @@ export default function RegisterPage() {
           variant="outline"
           disabled={isGoogleLoading || isSubmitting}
           onClick={handleGoogleSignIn}
-          className="h-11 w-full rounded-xl border-white/15 bg-white/[0.04] text-sm font-medium text-zinc-100 hover:bg-white/[0.08]"
+          className="h-11 w-full rounded-xl border-border bg-muted/60 text-sm font-medium text-foreground hover:bg-muted"
         >
-          {isGoogleLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin text-amber-400" /> : "Continue with Google"}
+          {isGoogleLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin text-amber-600 dark:text-amber-400" /> : "Continue with Google"}
         </Button>
 
         <div className="my-6 flex items-center gap-3">
-          <div className="h-px flex-1 bg-white/[0.08]" />
-          <span className="text-[11px] font-medium uppercase tracking-widest text-zinc-500">or email</span>
-          <div className="h-px flex-1 bg-white/[0.08]" />
+          <div className="h-px flex-1 bg-muted" />
+          <span className="text-[11px] font-medium uppercase tracking-widest text-muted-foreground">or email</span>
+          <div className="h-px flex-1 bg-muted" />
         </div>
 
         <form onSubmit={handleRegister} className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="register-name" className="text-xs font-medium text-zinc-300">Full Name</Label>
+            <Label htmlFor="register-name" className="text-xs font-medium text-muted-foreground">Full Name</Label>
             <div className="relative">
-              <User className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
-              <Input id="register-name" name="name" type="text" autoComplete="name" required placeholder="Riadul Islam" value={formData.name} onChange={handleChange} className="h-11 rounded-xl bg-white/[0.03] pl-10 text-sm text-white" />
+              <User className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input id="register-name" name="name" type="text" autoComplete="name" required placeholder="Riadul Islam" value={formData.name} onChange={handleChange} className="h-11 rounded-xl bg-muted/60 pl-10 text-sm text-foreground" />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="register-email" className="text-xs font-medium text-zinc-300">Email Address</Label>
+            <Label htmlFor="register-email" className="text-xs font-medium text-muted-foreground">Email Address</Label>
             <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
-              <Input id="register-email" name="email" type="email" autoComplete="email" required placeholder="you@example.com" value={formData.email} onChange={handleChange} className="h-11 rounded-xl bg-white/[0.03] pl-10 text-sm text-white" />
+              <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input id="register-email" name="email" type="email" autoComplete="email" required placeholder="you@example.com" value={formData.email} onChange={handleChange} className="h-11 rounded-xl bg-muted/60 pl-10 text-sm text-foreground" />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="register-photo" className="text-xs font-medium text-zinc-300">Photo URL</Label>
+            <Label htmlFor="register-photo" className="text-xs font-medium text-muted-foreground">Photo URL</Label>
             <div className="relative flex items-center">
-              <ImageIcon className="absolute left-3.5 h-4 w-4 text-zinc-500" />
-              <Input id="register-photo" name="photoURL" type="url" placeholder="https://example.com/avatar.jpg" value={formData.photoURL} onChange={handleChange} className="h-11 rounded-xl bg-white/[0.03] pl-10 pr-11 text-sm text-white" />
+              <ImageIcon className="absolute left-3.5 h-4 w-4 text-muted-foreground" />
+              <Input id="register-photo" name="photoURL" type="url" placeholder="https://example.com/avatar.jpg" value={formData.photoURL} onChange={handleChange} className="h-11 rounded-xl bg-muted/60 pl-10 pr-11 text-sm text-foreground" />
               {hasValidPhotoPreview && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={formData.photoURL} alt="Preview" onError={() => setAvatarError(true)} className="absolute right-2.5 h-7 w-7 rounded-full border border-amber-400 object-cover" />
@@ -209,21 +209,21 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="register-password" className="text-xs font-medium text-zinc-300">Password</Label>
+            <Label htmlFor="register-password" className="text-xs font-medium text-muted-foreground">Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
-              <Input id="register-password" name="password" type={showPassword ? "text" : "password"} autoComplete="new-password" required placeholder="Secure password" value={formData.password} onChange={handleChange} className="h-11 rounded-xl bg-white/[0.03] pl-10 pr-10 text-sm text-white" />
-              <button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400">
+              <Lock className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input id="register-password" name="password" type={showPassword ? "text" : "password"} autoComplete="new-password" required placeholder="Secure password" value={formData.password} onChange={handleChange} className="h-11 rounded-xl bg-muted/60 pl-10 pr-10 text-sm text-foreground" />
+              <button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
-            {passwordError && <p className="text-xs text-rose-400">{passwordError}</p>}
+            {passwordError && <p className="text-xs text-rose-600 dark:text-rose-400">{passwordError}</p>}
             
-            <div className="rounded-xl border border-white/[0.07] bg-white/[0.02] p-3 text-xs">
+            <div className="rounded-xl border border-border bg-muted/40 p-3 text-xs">
               <ul className="space-y-1">
-                <li className={passwordChecks.hasUppercase ? "text-emerald-400" : "text-zinc-500"}>✓ At least one uppercase letter (A-Z)</li>
-                <li className={passwordChecks.hasLowercase ? "text-emerald-400" : "text-zinc-500"}>✓ At least one lowercase letter (a-z)</li>
-                <li className={passwordChecks.hasMinLength ? "text-emerald-400" : "text-zinc-500"}>✓ Minimum 8 characters</li>
+                <li className={passwordChecks.hasUppercase ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"}>✓ At least one uppercase letter (A-Z)</li>
+                <li className={passwordChecks.hasLowercase ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"}>✓ At least one lowercase letter (a-z)</li>
+                <li className={passwordChecks.hasMinLength ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"}>✓ Minimum 8 characters</li>
               </ul>
             </div>
           </div>
@@ -233,8 +233,8 @@ export default function RegisterPage() {
           </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-zinc-400">
-          Already have an account? <Link href="/login" className="text-amber-400 underline">Login here</Link>
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Already have an account? <Link href="/login" className="text-amber-600 dark:text-amber-400 underline">Login here</Link>
         </p>
       </div>
     </div>

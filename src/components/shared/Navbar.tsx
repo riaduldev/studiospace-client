@@ -153,7 +153,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
               <span className="block text-lg font-extrabold tracking-tight text-foreground">
                 Studio<span className="text-amber-400">Space</span>
               </span>
-              <span className="hidden text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500 sm:block">
+              <span className="hidden text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:block">
                 Production Network
               </span>
             </span>
@@ -207,7 +207,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
                   </span>
                   <ChevronDown
                     size={16}
-                    className={`text-zinc-500 transition-transform ${menuOpen ? "rotate-180" : ""}`}
+                    className={`text-muted-foreground transition-transform ${menuOpen ? "rotate-180" : ""}`}
                   />
                 </button>
 
@@ -264,7 +264,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
               <div className="hidden items-center gap-2 lg:flex">
                 <Link
                   href="/login"
-                  className="rounded-full px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
+                  className="rounded-full px-4 py-2 text-sm font-semibold text-muted-foreground transition hover:text-foreground"
                 >
                   Login
                 </Link>

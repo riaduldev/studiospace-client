@@ -197,8 +197,8 @@ export default function AddStudioPage() {
 
   if (!user) {
     return (
-      <div className="flex min-h-[calc(100vh-5rem)] flex-col items-center justify-center bg-[#09090B] text-center text-white">
-        <p className="text-lg font-medium text-zinc-300">
+      <div className="flex min-h-[calc(100vh-5rem)] flex-col items-center justify-center bg-background text-center text-foreground">
+        <p className="text-lg font-medium text-muted-foreground">
           Log in to publish a studio listing.
         </p>
         <Link
@@ -212,51 +212,51 @@ export default function AddStudioPage() {
   }
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
+    <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-background px-4 py-12 sm:px-6 lg:px-8">
       {/* Ambient Spotlight Glow */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[760px] -translate-x-1/2 rounded-full bg-amber-500/[0.08] blur-[130px]" />
 
-      <div className="relative z-10 mx-auto max-w-4xl rounded-3xl border border-white/[0.1] bg-zinc-950/85 p-6 shadow-[0_24px_70px_rgba(0,0,0,0.85)] backdrop-blur-2xl sm:p-10">
-        <div className="mb-8 border-b border-white/[0.08] pb-6">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-amber-300">
+      <div className="relative z-10 mx-auto max-w-4xl rounded-3xl border border-border bg-card p-6 shadow-2xl backdrop-blur-2xl sm:p-10">
+        <div className="mb-8 border-b border-border pb-6">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-amber-700 dark:text-amber-300">
             <Sparkles className="h-3 w-3" />
             <span>Host Portal</span>
           </div>
 
-          <h1 className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          <h1 className="mt-3 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
             Add New Creative Studio
           </h1>
-          <p className="mt-1 text-sm text-zinc-400">
+          <p className="mt-1 text-sm text-muted-foreground">
             Publish your soundstage, cyclorama loft, or recording suite for creators worldwide.
           </p>
         </div>
 
-        <div className="mb-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5">
-          <h2 className="text-sm font-semibold text-zinc-200">Host Information</h2>
-          <p className="mt-1 text-xs text-zinc-500">
+        <div className="mb-8 rounded-2xl border border-border bg-muted/40 p-5">
+          <h2 className="text-sm font-semibold text-foreground">Host Information</h2>
+          <p className="mt-1 text-xs text-muted-foreground">
             These details come from your signed-in account and cannot be changed here.
           </p>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <Label htmlFor="hostName" className="text-xs font-medium text-zinc-300">
+              <Label htmlFor="hostName" className="text-xs font-medium text-muted-foreground">
                 Host Name
               </Label>
               <Input
                 id="hostName"
                 value={user.name || user.email}
                 readOnly
-                className="h-10 border-white/10 bg-white/[0.03] text-sm text-zinc-400"
+                className="h-10 border-border bg-muted/60 text-sm text-muted-foreground"
               />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="hostEmail" className="text-xs font-medium text-zinc-300">
+              <Label htmlFor="hostEmail" className="text-xs font-medium text-muted-foreground">
                 Host Email
               </Label>
               <Input
                 id="hostEmail"
                 value={user.email}
                 readOnly
-                className="h-10 border-white/10 bg-white/[0.03] text-sm text-zinc-400"
+                className="h-10 border-border bg-muted/60 text-sm text-muted-foreground"
               />
             </div>
           </div>
@@ -265,17 +265,17 @@ export default function AddStudioPage() {
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Section 1: Basic Information */}
           <div className="space-y-4">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
               1. General Information
             </h2>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-1.5 sm:col-span-2">
-                <Label htmlFor="title" className="text-xs font-medium text-zinc-300">
+                <Label htmlFor="title" className="text-xs font-medium text-muted-foreground">
                   Studio Title *
                 </Label>
                 <div className="relative">
-                  <Building2 className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+                  <Building2 className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="title"
                     name="title"
@@ -284,13 +284,13 @@ export default function AddStudioPage() {
                     placeholder="e.g. Stage 04 — Velvet Cyclorama Loft"
                     value={formData.title}
                     onChange={handleChange}
-                    className="h-11 rounded-xl border-white/10 bg-white/[0.03] pl-10 text-sm text-white placeholder:text-zinc-500 focus-visible:border-amber-400/60 focus-visible:ring-amber-400/20"
+                    className="h-11 rounded-xl border-border bg-muted/60 pl-10 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/30"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="category" className="text-xs font-medium text-zinc-300">
+                <Label htmlFor="category" className="text-xs font-medium text-muted-foreground">
                   Category *
                 </Label>
                 <select
@@ -298,10 +298,10 @@ export default function AddStudioPage() {
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  className="h-11 w-full rounded-xl border border-white/10 bg-zinc-900 px-3 text-sm text-white focus:border-amber-400/60 focus:outline-none focus:ring-1 focus:ring-amber-400/20"
+                  className="h-11 w-full rounded-xl border border-border bg-muted px-3 text-sm text-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring/30"
                 >
                   {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat} className="bg-zinc-950 text-white">
+                    <option key={cat} value={cat} className="bg-card text-foreground">
                       {cat}
                     </option>
                   ))}
@@ -309,11 +309,11 @@ export default function AddStudioPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="location" className="text-xs font-medium text-zinc-300">
+                <Label htmlFor="location" className="text-xs font-medium text-muted-foreground">
                   Location / Address *
                 </Label>
                 <div className="relative">
-                  <MapPin className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+                  <MapPin className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="location"
                     name="location"
@@ -322,7 +322,7 @@ export default function AddStudioPage() {
                     placeholder="e.g. 450 Broadway, New York, NY"
                     value={formData.location}
                     onChange={handleChange}
-                    className="h-11 rounded-xl border-white/10 bg-white/[0.03] pl-10 text-sm text-white placeholder:text-zinc-500 focus-visible:border-amber-400/60 focus-visible:ring-amber-400/20"
+                    className="h-11 rounded-xl border-border bg-muted/60 pl-10 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/30"
                   />
                 </div>
               </div>
@@ -331,17 +331,17 @@ export default function AddStudioPage() {
 
           {/* Section 2: Pricing & Capacity */}
           <div className="space-y-4">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
               2. Rates &amp; Capacity
             </h2>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="space-y-1.5">
-                <Label htmlFor="hourlyRate" className="text-xs font-medium text-zinc-300">
+                <Label htmlFor="hourlyRate" className="text-xs font-medium text-muted-foreground">
                   Hourly Rate ($) *
                 </Label>
                 <div className="relative">
-                  <DollarSign className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+                  <DollarSign className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="hourlyRate"
                     name="hourlyRate"
@@ -351,17 +351,17 @@ export default function AddStudioPage() {
                     placeholder="150"
                     value={formData.hourlyRate}
                     onChange={handleChange}
-                    className="h-11 rounded-xl border-white/10 bg-white/[0.03] pl-10 text-sm text-white placeholder:text-zinc-500 focus-visible:border-amber-400/60 focus-visible:ring-amber-400/20"
+                    className="h-11 rounded-xl border-border bg-muted/60 pl-10 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/30"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="securityDeposit" className="text-xs font-medium text-zinc-300">
+                <Label htmlFor="securityDeposit" className="text-xs font-medium text-muted-foreground">
                   Security Deposit ($)
                 </Label>
                 <div className="relative">
-                  <ShieldCheck className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+                  <ShieldCheck className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="securityDeposit"
                     name="securityDeposit"
@@ -370,17 +370,17 @@ export default function AddStudioPage() {
                     placeholder="300"
                     value={formData.securityDeposit}
                     onChange={handleChange}
-                    className="h-11 rounded-xl border-white/10 bg-white/[0.03] pl-10 text-sm text-white placeholder:text-zinc-500 focus-visible:border-amber-400/60 focus-visible:ring-amber-400/20"
+                    className="h-11 rounded-xl border-border bg-muted/60 pl-10 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/30"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="maxCapacity" className="text-xs font-medium text-zinc-300">
+                <Label htmlFor="maxCapacity" className="text-xs font-medium text-muted-foreground">
                   Max Crew Capacity
                 </Label>
                 <div className="relative">
-                  <Users className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+                  <Users className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="maxCapacity"
                     name="maxCapacity"
@@ -389,7 +389,7 @@ export default function AddStudioPage() {
                     placeholder="12"
                     value={formData.maxCapacity}
                     onChange={handleChange}
-                    className="h-11 rounded-xl border-white/10 bg-white/[0.03] pl-10 text-sm text-white placeholder:text-zinc-500 focus-visible:border-amber-400/60 focus-visible:ring-amber-400/20"
+                    className="h-11 rounded-xl border-border bg-muted/60 pl-10 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/30"
                   />
                 </div>
               </div>
@@ -398,28 +398,28 @@ export default function AddStudioPage() {
 
           {/* Section 3: Image Upload / URL */}
           <div className="space-y-4">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
               3. Studio Image
             </h2>
 
             <div className="space-y-3">
-              <Label className="text-xs font-medium text-zinc-300">
+              <Label className="text-xs font-medium text-muted-foreground">
                 Upload Studio Photos or Provide a Cover Image URL *
               </Label>
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                 <div className="relative flex-1">
-                  <ImageIcon className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+                  <ImageIcon className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     type="file"
                     accept="image/*"
                     multiple
                     onChange={handleImageFileChange}
                     disabled={isUploadingImage}
-                    className="h-11 cursor-pointer rounded-xl border-white/10 bg-white/[0.03] pl-10 pt-2 text-sm text-zinc-300 file:mr-4 file:rounded-lg file:border-0 file:bg-amber-400 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-zinc-950 hover:file:bg-amber-300"
+                    className="h-11 cursor-pointer rounded-xl border-border bg-muted/60 pl-10 pt-2 text-sm text-muted-foreground file:mr-4 file:rounded-lg file:border-0 file:bg-amber-400 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-zinc-950 hover:file:bg-amber-300"
                   />
                 </div>
                 {isUploadingImage && (
-                  <span className="flex items-center gap-2 text-xs text-amber-400">
+                  <span className="flex items-center gap-2 text-xs text-amber-600 dark:text-amber-400">
                     <Loader2 className="h-4 w-4 animate-spin" /> Uploading...
                   </span>
                 )}
@@ -427,7 +427,7 @@ export default function AddStudioPage() {
 
               {/* সরাসরি ইমেজ লিংক বসানোর অপশন */}
               <div className="space-y-1 pt-1">
-                <Label htmlFor="imageUrlInput" className="text-[11px] text-zinc-400">
+                <Label htmlFor="imageUrlInput" className="text-[11px] text-muted-foreground">
                   Cover image URL (required):
                 </Label>
                 <Input
@@ -437,12 +437,12 @@ export default function AddStudioPage() {
                   placeholder="https://i.ibb.co/... or any image link"
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
-                  className="h-10 rounded-xl border-white/10 bg-white/[0.03] text-xs text-white"
+                  className="h-10 rounded-xl border-border bg-muted/60 text-xs text-foreground"
                 />
               </div>
 
               {imageUrl && (
-                <div className="relative mt-2 h-48 w-full overflow-hidden rounded-2xl border border-white/15 bg-zinc-900">
+                <div className="relative mt-2 h-48 w-full overflow-hidden rounded-2xl border border-border bg-muted">
                   <img src={imageUrl} alt="Studio cover preview" className="h-full w-full object-cover" />
                   <span className="absolute bottom-3 right-3 rounded-full bg-emerald-500/95 px-3 py-1 text-xs font-semibold text-zinc-950 shadow-lg">
                     Cover image ready
@@ -454,7 +454,7 @@ export default function AddStudioPage() {
                   {galleryImages.map((galleryImage, index) => (
                     <div
                       key={`${galleryImage}-${index}`}
-                      className="group relative h-28 overflow-hidden rounded-xl border border-white/10 bg-zinc-900"
+                      className="group relative h-28 overflow-hidden rounded-xl border border-border bg-muted"
                     >
                       <img src={galleryImage} alt={`Studio gallery image ${index + 1}`} className="h-full w-full object-cover" />
                       <button
@@ -465,7 +465,7 @@ export default function AddStudioPage() {
                             current.filter((_, imageIndex) => imageIndex !== index)
                           )
                         }
-                        className="absolute right-2 top-2 grid size-7 place-items-center rounded-full bg-zinc-950/85 text-white opacity-0 transition group-hover:opacity-100 focus:opacity-100"
+                        className="absolute right-2 top-2 grid size-7 place-items-center rounded-full bg-zinc-950/85 text-white opacity-100 transition focus:opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
                       >
                         <X className="size-4" />
                       </button>
@@ -478,7 +478,7 @@ export default function AddStudioPage() {
 
           {/* Section 4: Amenities Checkboxes */}
           <div className="space-y-4">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
               4. Amenities &amp; Equipment
             </h2>
 
@@ -492,8 +492,8 @@ export default function AddStudioPage() {
                     onClick={() => handleAmenityToggle(amenity)}
                     className={`flex items-center justify-between rounded-xl border p-3 text-left text-xs font-medium transition-all ${
                       selected
-                        ? "border-amber-400/60 bg-amber-400/10 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.15)]"
-                        : "border-white/10 bg-white/[0.02] text-zinc-400 hover:border-white/20 hover:text-zinc-200"
+                        ? "border-amber-400/60 bg-amber-400/10 text-amber-700 dark:text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.15)]"
+                        : "border-border bg-muted/40 text-muted-foreground hover:border-border hover:text-foreground"
                     }`}
                   >
                     <span>{amenity}</span>
@@ -501,7 +501,7 @@ export default function AddStudioPage() {
                       className={`flex h-4 w-4 items-center justify-center rounded border ${
                         selected
                           ? "border-amber-400 bg-amber-400 text-zinc-950"
-                          : "border-zinc-700 bg-zinc-900"
+                          : "border-border bg-muted"
                       }`}
                     >
                       {selected && <Check className="h-3 w-3 stroke-[3]" />}
@@ -514,12 +514,12 @@ export default function AddStudioPage() {
 
           {/* Section 5: Detailed Overview */}
           <div className="space-y-4">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
               5. Detailed Overview
             </h2>
 
             <div className="space-y-1.5">
-              <Label htmlFor="overview" className="text-xs font-medium text-zinc-300">
+              <Label htmlFor="overview" className="text-xs font-medium text-muted-foreground">
                 Description &amp; Specifications
               </Label>
               <textarea
@@ -529,7 +529,7 @@ export default function AddStudioPage() {
                 placeholder="Describe lighting grids, ceiling height, power supply, etc..."
                 value={formData.overview}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-white/10 bg-white/[0.03] p-3 text-sm text-white placeholder:text-zinc-500 focus:border-amber-400/60 focus:outline-none"
+                className="w-full rounded-xl border border-border bg-muted/60 p-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
               />
             </div>
           </div>

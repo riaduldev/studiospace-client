@@ -26,7 +26,7 @@ export default function StudiosPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-[calc(100vh-5rem)] bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
+        <div className="min-h-[calc(100vh-5rem)] bg-background px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <StudioCardSkeletonGrid className="mt-8" />
           </div>
@@ -102,7 +102,7 @@ function StudiosExplorer() {
   }, [queryString]);
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-[#09090B] px-4 py-12 sm:px-6 lg:px-8">
+    <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-background px-4 py-12 sm:px-6 lg:px-8">
       {/* Ambient Spotlight */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[380px] w-[700px] -translate-x-1/2 rounded-full bg-amber-500/[0.06] blur-[120px]" />
 
@@ -110,18 +110,18 @@ function StudiosExplorer() {
         {/* Header & Search */}
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-white">Explore Creative Studios</h1>
-            <p className="mt-1 text-sm text-zinc-400">Book professional soundstages, cyclorama lofts, and recording spaces.</p>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">Explore Creative Studios</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Book professional soundstages, cyclorama lofts, and recording spaces.</p>
           </div>
 
           <div className="relative w-full lg:w-80">
-            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search by title or location..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="h-11 rounded-xl border-white/10 bg-white/[0.03] pl-10 text-sm text-white placeholder:text-zinc-500 focus-visible:border-amber-400/60"
+              className="h-11 rounded-xl border-border bg-muted/60 pl-10 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring"
             />
           </div>
         </div>
@@ -135,7 +135,7 @@ function StudiosExplorer() {
               className={`rounded-full px-4 py-2 text-xs font-medium transition-all ${
                 selectedCategory === cat
                   ? "bg-amber-400 text-zinc-950 font-semibold shadow-[0_0_15px_rgba(245,158,11,0.3)]"
-                  : "border border-white/10 bg-white/[0.03] text-zinc-400 hover:text-white"
+                  : "border border-border bg-muted/60 text-muted-foreground hover:text-foreground"
               }`}
             >
               {cat === "all" ? "All Studios" : cat}
@@ -148,11 +148,11 @@ function StudiosExplorer() {
           <StudioCardSkeletonGrid className="mt-8" />
         ) : studios.length === 0 ? (
           <div className="mt-20 text-center">
-            <Building2 className="mx-auto h-12 w-12 text-zinc-600" />
-            <h2 className="mt-4 text-lg font-semibold text-zinc-200">
+            <Building2 className="mx-auto h-12 w-12 text-muted-foreground" />
+            <h2 className="mt-4 text-lg font-semibold text-foreground">
               {queryString ? "No studios match your search" : "No studios listed yet"}
             </h2>
-            <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500">
+            <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
               {queryString
                 ? "Try another search or clear your filters to see all available spaces."
                 : "Be the first to share a creative space with the StudioSpace community."}
@@ -165,7 +165,7 @@ function StudiosExplorer() {
                   setSearch("");
                   updateCategory("all");
                 }}
-                className="mt-5 rounded-xl border-white/15 bg-white/[0.03] text-zinc-200 hover:bg-white/[0.08]"
+                className="mt-5 rounded-xl border-border bg-muted/60 text-foreground hover:bg-muted"
               >
                 <SearchX className="mr-2 size-4" />
                 Clear search and filters
@@ -188,9 +188,9 @@ function StudiosExplorer() {
             {studios.map((studio) => (
               <div
                 key={studio._id}
-                className="group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-zinc-950/80 transition-all duration-300 hover:border-amber-400/40 hover:shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
+                className="group relative overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:border-amber-400/40 hover:shadow-xl"
               >
-                <div className="relative h-52 w-full overflow-hidden bg-zinc-900">
+                <div className="relative h-52 w-full overflow-hidden bg-muted">
                   <img
                     src={studio.imageUrl}
                     alt={studio.title}
@@ -202,26 +202,26 @@ function StudiosExplorer() {
                 </div>
 
                 <div className="p-5">
-                  <div className="flex items-center justify-between text-xs text-zinc-400">
-                    <span className="flex items-center gap-1">
-                      <MapPin className="h-3.5 w-3.5 text-zinc-500" />
-                      {studio.location}
+                  <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+                    <span className="flex min-w-0 items-center gap-1">
+                      <MapPin className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                      <span className="truncate">{studio.location}</span>
                     </span>
-                    <span className="flex items-center gap-1 font-semibold text-amber-400">
-                      <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                    <span className="flex shrink-0 items-center gap-1 font-semibold text-amber-600 dark:text-amber-400">
+                      <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-600 dark:text-amber-400" />
                       {studio.rating || "New"}
                     </span>
                   </div>
 
-                  <h3 className="mt-2 text-lg font-bold text-white group-hover:text-amber-300 transition-colors">
+                  <h3 className="mt-2 line-clamp-2 text-lg font-bold text-foreground transition-colors group-hover:text-amber-700 dark:group-hover:text-amber-300">
                     {studio.title}
                   </h3>
 
-                  <div className="mt-5 flex items-center justify-between border-t border-white/[0.06] pt-4">
+                  <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
                     <div>
-                      <span className="text-xs text-zinc-500">Hourly Rate</span>
-                      <p className="text-base font-bold text-white">
-                        ${studio.hourlyRate} <span className="text-xs font-normal text-zinc-400">/hr</span>
+                      <span className="text-xs text-muted-foreground">Hourly Rate</span>
+                      <p className="text-base font-bold text-foreground">
+                        ${studio.hourlyRate} <span className="text-xs font-normal text-muted-foreground">/hr</span>
                       </p>
                     </div>
 
@@ -229,7 +229,7 @@ function StudiosExplorer() {
                             href={`/studios/${studio._id}`}
                             className={buttonVariants({
                               className:
-                                "rounded-xl bg-white/[0.08] text-xs font-semibold text-white hover:bg-amber-400 hover:text-zinc-950",
+                                "rounded-xl bg-muted text-xs font-semibold text-foreground hover:bg-amber-400 hover:text-zinc-950",
                             })}
                           >
                             View Details <ArrowRight className="ml-1.5 h-3.5 w-3.5" />

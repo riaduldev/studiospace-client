@@ -9,9 +9,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       attribute="class"
       defaultTheme="light"
       enableSystem={false}
-      scriptProps={{
-        type: typeof window === "undefined" ? "text/javascript" : "text/plain",
-      }}
+      disableTransitionOnChange
     >
       {children}
     </NextThemesProvider>
