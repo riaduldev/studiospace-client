@@ -1,98 +1,74 @@
-# StudioSpace — Creative Studio Discovery & Booking Platform
+<div align="center">
 
-**Live site (client):** https://studiospace-client-eta.vercel.app
+# 🎬 StudioSpace
+### Peer-to-Peer Creative Workspace & Production Studio Sharing Platform
 
-StudioSpace connects creators (filmmakers, photographers, podcasters, musicians) with verified professional soundstages, cyclorama lofts, podcast rooms, and recording suites. Hosts list their spaces; creators search, book, and manage reservations — all from one modern, responsive web app.
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://studiospace-client-eta.vercel.app)
+[![API Status](https://img.shields.io/badge/API-Render-46E3B7?style=for-the-badge&logo=render&logoColor=black)](https://studiospace-server-bgs9.onrender.com)
+[![Next.js](https://img.shields.io/badge/Next.js_16-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+
+**StudioSpace** connects filmmakers, photographers, podcasters, and musicians with verified professional soundstages, cyclorama lofts, podcast rooms, and recording suites. Hosts list and manage their spaces while creators discover, book, and manage reservations seamlessly.
+
+[🌐 Live Application](https://studiospace-client-eta.vercel.app) · [🔌 Live API](https://studiospace-server-bgs9.onrender.com)
+
+</div>
+
+---
+
+## 📋 Table of Contents
+- [Key Features](#-key-features)
+- [Tech Stack](#-tech-stack)
+- [Examiner / Demo Credentials](#-examiner--demo-credentials)
+- [Local Development Setup](#-local-development-setup)
+- [Environment Variables](#-environment-variables)
+- [API Reference](#-api-reference)
+- [Quality Assurance & Responsiveness](#-quality-assurance--responsiveness)
+- [Deployment Architecture](#-deployment-architecture)
+
+---
 
 ## ✨ Key Features
 
-- 🔍 **Discover & filter studios** by category, location, and keyword with instant search.
-- 📅 **4-hour session booking** with transparent hourly rates and refundable security deposits.
-- ❤️ **Saved Studios wishlist** — heart any studio to save it for later (per-user, MongoDB-backed).
-- 📄 **Downloadable PDF invoices** for confirmed bookings, generated client-side with full booking details.
-- 📊 **Creator & host dashboards** to manage listings, bookings, cancellations, and earnings.
-- 🌗 **Light/dark theme**, fully responsive across mobile, tablet, and desktop (320px → 1440px).
-- 🔐 **Secure authentication** via Better Auth (email/password + Google OAuth) with cross-origin Bearer sessions.
+- **🔍 Smart Discovery & Filtering:** Search and filter studios instantaneously by category, location, and keywords with responsive skeleton loading states and helpful empty-state CTAs.
+- **📅 Session-Based Booking Engine:** Streamlined 4-hour session booking workflow featuring transparent hourly pricing, refundable security deposits, and real-time reservation tracking.
+- **❤️ Persistent Wishlist:** Save favorite studios to a per-user, MongoDB-synced wishlist for quick access later.
+- **📊 Role-Based Dashboards:** Dedicated management views for creators and hosts to create/edit studio listings, monitor bookings, handle cancellations, and track earnings.
+- **🔐 Cross-Origin Authentication:** Secure email/password and Google OAuth login powered by **Better Auth** using cross-origin Bearer token session validation.
+- **🌗 Adaptive UI & UX:** Built with accessible `shadcn/ui` primitives, standardized toast feedback (`Sonner`), custom 404 illustrations, and full mobile-to-desktop responsiveness.
+
+---
 
 ## 🛠 Tech Stack
 
-**Frontend (this repo — `studiospace-client`)**
-- Next.js 16.4.6 (App Router, React 19.3, React Compiler)
-- TypeScript, Tailwind CSS v4
-- shadcn/ui (`base-nova`, built on `@base-ui/react`)
-- Better Auth (MongoDB adapter) + `bearer()` plugin
-- jsPDF (invoice generation), Sonner (toasts)
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend (`studiospace-client`)** | Next.js 16.4 (App Router), React 19, React Compiler, TypeScript, Tailwind CSS v4, shadcn/ui (`@base-ui/react`), Lucide Icons |
+| **Backend (`studiospace-server`)** | Node.js (≥ 20), Express 5, RESTful Architecture, Multer (10 MB upload limit), ImgBB Cloud Storage |
+| **Database & Auth** | MongoDB Atlas, Better Auth (MongoDB Adapter + `bearer()` plugin + Google OAuth) |
+| **Utilities & Tooling** | `Sonner` (Toast notifications), ESLint, TypeScript Compiler |
 
-**Backend (`studiospace-server`)**
-- Node.js ≥ 20, Express 5
-- MongoDB (Atlas)
-- Better Auth session validation via `/api/auth/get-session`
-- Multer (10 MB) + ImgBB for image uploads
+---
 
-## 🚀 Local Setup
+## 🔑 Examiner / Demo Credentials
 
-### 1. Start the API server
+Use the pre-configured test account below to explore authenticated features without registering:
+
+| Field | Credential |
+| :--- | :--- |
+| **Email** | `examiner@studiospace.test` |
+| **Password** | `Examiner123` |
+
+> **Capabilities:** Browse and filter studios, manage saved wishlist items, book studio sessions, and view or cancel reservations on the My Bookings page.
+
+---
+
+## 🚀 Local Development Setup
+
+> **Note:** Both the client and API server must run concurrently for data fetching and authentication to function properly.
+
+### 1. Clone the Repositories
 ```bash
-cd ../studiospace-server
-npm install
-# create .env with PORT, MONGODB_URI, BETTER_AUTH_URL, CLIENT_ORIGINS, IMGBB_API_KEY
-npm start          # or: npm run dev
-```
-The API runs on `http://localhost:8000`.
-
-### 2. Start the client
-```bash
-cd ../studiospace-client
-npm install
-# create .env.local with BETTER_AUTH_URL, MONGODB_URI, BETTER_AUTH_SECRET,
-# GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXT_PUBLIC_API_URL=http://localhost:8000
-npm run dev
-```
-Open http://localhost:3000.
-
-### 3. Verify
-```bash
-npm run lint        # 0 errors (pre-existing <img> warnings only)
-npx tsc --noEmit    # type check
-npm run build       # production build
-```
-
-> Both servers must run together — the client fetches all studio/booking data from the API on port 8000.
-
-## 🔑 Examiner Test Credentials
-
-Use these to log in and explore the app:
-
-- **Email:** `examiner@studiospace.test`
-- **Password:** `Examiner123`
-
-This account can browse studios, save favorites to the wishlist, create bookings, view the My Bookings page, and download PDF invoices for confirmed bookings.
-
-## 📡 API Route Contract
-
-Public:
-- `GET /api/studios`, `GET /api/studios/:id`
-
-Authenticated (Bearer token required):
-- `GET /api/my-studios`, `GET /api/my-studios/:id`
-- `POST /api/studios`, `PATCH /api/studios/:id`, `DELETE /api/studios/:id`
-- `GET /api/bookings`, `POST /api/bookings`, `PATCH /api/bookings/:id/cancel`
-- `POST /api/upload`
-- `GET /api/favorites`, `GET /api/favorites/ids`, `POST /api/favorites/:studioId`, `DELETE /api/favorites/:studioId`
-
-## 🌐 Deployment
-
-- Client (Vercel): https://studiospace-client-eta.vercel.app
-- API (Render): https://studiospace-server-bgs9.onrender.com
-
-Set `NEXT_PUBLIC_API_URL=https://studiospace-server-bgs9.onrender.com` on Vercel **before** building (it is inlined into the bundle).
-
-## 📱 Responsive Design
-
-Audited across 320px–1440px. Mobile-first grids collapse to a single column on phones; tap targets are ≥44px; no horizontal scroll on any page.
-
-## License
-
-Private project. All rights reserved.
-EOF
-echo "README updated"; wc -l README.md
+git clone https://github.com/riaduldev/studiospace-client.git
+git clone https://github.com/riaduldev/studiospace-server.git
