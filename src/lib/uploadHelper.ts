@@ -1,19 +1,23 @@
-import { getApiUrl } from "@/lib/api-url";
+import { authClient } from "@/lib/auth-client";
 
 export async function uploadImageToServer(file: File): Promise<string> {
   const formData = new FormData();
   formData.append("image", file);
 
-  const response = await fetch(getApiUrl("/api/upload"), {
+  const { data: sessionData } = await authClient.getSession();
+  const sessionToken = sessionData?.session?.token;
+
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload`, {
     method: "POST",
-    body: formData, 
+    body: formData,
     credentials: "include",
+    headers: sessionToken
+      ? { Authorization: `Bearer ${sessionToken}` }
+      : undefined,
   });
 
   if (response.status === 404) {
-    throw new Error(
-      "The upload route was not found. Stop the service on port 8000 and start the API from the studiospace-server folder."
-    );
+    throw new Error("The upload endpoint was not found. Check that the API server is running.");
   }
 
   const data = await response.json().catch(() => null);

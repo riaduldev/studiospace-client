@@ -18,7 +18,6 @@ import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getApiUrl } from "@/lib/api-url";
 import { authClient } from "@/lib/auth-client";
 import { BrandedLoader } from "@/components/shared/loading-state";
 import Link from "next/link";
@@ -81,6 +80,7 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
   const { data: session, isPending: isSessionPending } = authClient.useSession();
   const user = session?.user;
   const userEmail = user?.email;
+  const sessionToken = session?.session?.token;
 
   const [studioResult, setStudioResult] = useState<{
     id: string;
@@ -109,7 +109,7 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
 
     async function loadStudio() {
       try {
-        const response = await fetch(getApiUrl(`/api/studios/${id}`), {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/studios/${id}`, {
           signal: controller.signal,
         });
         const data = await response.json();
@@ -143,12 +143,16 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
     const email = userEmail;
     const controller = new AbortController();
     let active = true;
+    const headers = sessionToken
+      ? { Authorization: `Bearer ${sessionToken}` }
+      : undefined;
 
     async function loadExistingBooking() {
       try {
-        const response = await fetch(getApiUrl("/api/bookings"), {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings`, {
           signal: controller.signal,
           credentials: "include",
+          headers,
         });
         const data = await response.json().catch(() => null);
 
@@ -173,7 +177,7 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
       active = false;
       controller.abort();
     };
-  }, [id, isSessionPending, userEmail]);
+  }, [id, isSessionPending, userEmail, sessionToken]);
 
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -206,8 +210,11 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
       setIsBookingSubmitting(true);
 
       try {
-        const checkResponse = await fetch(getApiUrl("/api/bookings"), {
+        const checkResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings`, {
           credentials: "include",
+          headers: sessionToken
+            ? { Authorization: `Bearer ${sessionToken}` }
+            : undefined,
         });
         const checkData = await checkResponse.json().catch(() => null);
 
@@ -231,9 +238,12 @@ export default function StudioDetailsPage({ params }: { params: Promise<{ id: st
 
       const bookingPayload = { studioId: studio?._id, bookingDate };
 
-      const res = await fetch(getApiUrl("/api/bookings"), {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
+        },
         credentials: "include",
         body: JSON.stringify(bookingPayload),
       });

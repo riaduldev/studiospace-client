@@ -19,7 +19,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { buttonVariants } from "@/components/ui/button";
-import { getApiUrl } from "@/lib/api-url";
 import { authClient } from "@/lib/auth-client";
 
 interface Studio {
@@ -50,6 +49,7 @@ export default function DashboardPage() {
   const { data: session, isPending: isSessionPending } = authClient.useSession();
   const user = session?.user;
   const userEmail = user?.email;
+  const sessionToken = session?.session?.token;
 
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const studios =
@@ -64,17 +64,22 @@ export default function DashboardPage() {
     const email = userEmail;
     const controller = new AbortController();
     let active = true;
+    const headers = sessionToken
+      ? { Authorization: `Bearer ${sessionToken}` }
+      : undefined;
 
     async function loadDashboard() {
       try {
         const [studiosRes, bookingsRes] = await Promise.all([
-          fetch(getApiUrl("/api/my-studios"), {
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/my-studios`, {
             signal: controller.signal,
             credentials: "include",
+            headers,
           }),
-          fetch(getApiUrl("/api/bookings"), {
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings`, {
             signal: controller.signal,
             credentials: "include",
+            headers,
           }),
         ]);
 
@@ -114,7 +119,7 @@ export default function DashboardPage() {
       active = false;
       controller.abort();
     };
-  }, [isSessionPending, userEmail]);
+  }, [isSessionPending, userEmail, sessionToken]);
 
   // ডায়নামিক ক্যালকুলেশন
   const totalSpentOrEarned = bookings

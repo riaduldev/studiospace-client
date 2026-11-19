@@ -21,7 +21,6 @@ import {
   Film
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
-import { getApiUrl } from "@/lib/api-url";
 import { StudioCardSkeletonGrid } from "@/components/shared/loading-state";
 
 interface Studio {
@@ -83,7 +82,7 @@ export default function HomePage() {
 
     async function loadFeaturedStudios() {
       try {
-        const response = await fetch(getApiUrl("/api/studios"), {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/studios`, {
           signal: controller.signal,
         });
         const data = await response.json();

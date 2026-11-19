@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Calendar, MapPin, XCircle, ArrowRight, Search, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { getApiUrl } from "@/lib/api-url";
 import { authClient } from "@/lib/auth-client";
 import { BrandedLoader } from "@/components/shared/loading-state";
 
@@ -21,6 +20,7 @@ interface Booking {
 export default function MyBookingsPage() {
   const { data: session, isPending: isSessionPending } = authClient.useSession();
   const userEmail = session?.user?.email;
+  const sessionToken = session?.session?.token;
 
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loadedEmail, setLoadedEmail] = useState<string | null>(null);
@@ -32,12 +32,16 @@ export default function MyBookingsPage() {
 
     const controller = new AbortController();
     let active = true;
+    const headers = sessionToken
+      ? { Authorization: `Bearer ${sessionToken}` }
+      : undefined;
 
     async function loadBookings() {
       try {
-        const response = await fetch(getApiUrl("/api/bookings"), {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings`, {
           signal: controller.signal,
           credentials: "include",
+          headers,
         });
         const data = await response.json();
 
@@ -66,15 +70,18 @@ export default function MyBookingsPage() {
       active = false;
       controller.abort();
     };
-  }, [isSessionPending, userEmail]);
+  }, [isSessionPending, userEmail, sessionToken]);
 
   const handleCancelBooking = async (id: string) => {
     if (cancellingBookingId) return;
     try {
       setCancellingBookingId(id);
-      const response = await fetch(getApiUrl(`/api/bookings/${id}/cancel`), {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings/${id}/cancel`, {
         method: "PATCH",
         credentials: "include",
+        headers: sessionToken
+          ? { Authorization: `Bearer ${sessionToken}` }
+          : undefined,
       });
       const data = await response.json();
 

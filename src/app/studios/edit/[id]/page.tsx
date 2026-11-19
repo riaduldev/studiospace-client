@@ -23,7 +23,6 @@ import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getApiUrl } from "@/lib/api-url";
 import { uploadImageToServer } from "@/lib/uploadHelper";
 import { BrandedLoader } from "@/components/shared/loading-state";
 import { authClient } from "@/lib/auth-client";
@@ -59,6 +58,7 @@ export default function EditStudioPage({ params }: { params: Promise<{ id: strin
   const router = useRouter();
   const { data: session, isPending: isSessionPending } = authClient.useSession();
   const userEmail = session?.user?.email;
+  const sessionToken = session?.session?.token;
 
   const [loadedStudioId, setLoadedStudioId] = useState<string | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
@@ -85,12 +85,16 @@ export default function EditStudioPage({ params }: { params: Promise<{ id: strin
     if (isSessionPending || !userEmail) return;
     const controller = new AbortController();
     let active = true;
+    const headers = sessionToken
+      ? { Authorization: `Bearer ${sessionToken}` }
+      : undefined;
 
     async function loadStudioData() {
       try {
-        const response = await fetch(getApiUrl(`/api/my-studios/${id}`), {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/my-studios/${id}`, {
           signal: controller.signal,
           credentials: "include",
+          headers,
         });
         const data = await response.json();
 
@@ -139,7 +143,7 @@ export default function EditStudioPage({ params }: { params: Promise<{ id: strin
       active = false;
       controller.abort();
     };
-  }, [id, isSessionPending, userEmail]);
+  }, [id, isSessionPending, userEmail, sessionToken]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -221,9 +225,12 @@ export default function EditStudioPage({ params }: { params: Promise<{ id: strin
         galleryImages: [formData.imageUrl, ...galleryImages],
       };
 
-      const res = await fetch(getApiUrl(`/api/studios/${id}`), {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/studios/${id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
+        },
         credentials: "include",
         body: JSON.stringify(updatePayload),
       });

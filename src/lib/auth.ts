@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { bearer } from "better-auth/plugins";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "@better-auth/mongo-adapter";
 
@@ -35,4 +36,5 @@ export const auth = betterAuth({
     },
   },
   database: mongodbAdapter(db, { client }),
+  plugins: [bearer()],
 });

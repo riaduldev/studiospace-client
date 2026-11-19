@@ -7,7 +7,6 @@ import { Search, SearchX, MapPin, Star, Building2, ArrowRight } from "lucide-rea
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { getApiUrl } from "@/lib/api-url";
 import { StudioCardSkeletonGrid } from "@/components/shared/loading-state";
 
 interface Studio {
@@ -73,7 +72,7 @@ function StudiosExplorer() {
     async function loadStudios() {
       try {
         const query = queryString ? `?${queryString}` : "";
-        const response = await fetch(getApiUrl(`/api/studios${query}`), {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/studios${query}`, {
           signal: controller.signal,
         });
         const data = await response.json();

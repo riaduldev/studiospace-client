@@ -21,7 +21,6 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getApiUrl } from "@/lib/api-url";
 import { authClient } from "@/lib/auth-client";
 import { uploadImageToServer } from "@/lib/uploadHelper";
 import { BrandedLoader } from "@/components/shared/loading-state";
@@ -55,6 +54,7 @@ export default function AddStudioPage() {
   const router = useRouter();
   const { data: session, isPending: isSessionPending } = authClient.useSession();
   const user = session?.user;
+  const sessionToken = session?.session?.token;
 
   const [formData, setFormData] = useState({
     title: "",
@@ -165,9 +165,12 @@ export default function AddStudioPage() {
         ownerEmail: user.email,
       };
 
-      const response = await fetch(getApiUrl("/api/studios"), {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/studios`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(sessionToken ? { Authorization: `Bearer ${sessionToken}` } : {}),
+        },
         credentials: "include",
         body: JSON.stringify(studioPayload),
       });

@@ -15,7 +15,6 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { getApiUrl } from "@/lib/api-url";
 import { authClient } from "@/lib/auth-client";
 import { BrandedLoader } from "@/components/shared/loading-state";
 
@@ -31,6 +30,7 @@ interface Studio {
 export default function MyListingsPage() {
   const { data: session, isPending: isSessionPending } = authClient.useSession();
   const userEmail = session?.user?.email;
+  const sessionToken = session?.session?.token;
 
   const [studios, setStudios] = useState<Studio[]>([]);
   const [loadedEmail, setLoadedEmail] = useState<string | null>(null);
@@ -43,12 +43,15 @@ export default function MyListingsPage() {
 
     const controller = new AbortController();
     let active = true;
+    const headers = sessionToken
+      ? { Authorization: `Bearer ${sessionToken}` }
+      : undefined;
 
     async function loadListings() {
       try {
         const response = await fetch(
-          getApiUrl("/api/my-studios"),
-          { signal: controller.signal, credentials: "include" }
+          `${process.env.NEXT_PUBLIC_API_URL}/api/my-studios`,
+          { signal: controller.signal, credentials: "include", headers }
         );
         const data = await response.json();
 
@@ -73,16 +76,19 @@ export default function MyListingsPage() {
       active = false;
       controller.abort();
     };
-  }, [isSessionPending, userEmail]);
+  }, [isSessionPending, userEmail, sessionToken]);
 
   const handleDelete = async (id: string) => {
     if (deletingStudioId) return;
 
     try {
       setDeletingStudioId(id);
-      const response = await fetch(getApiUrl(`/api/studios/${id}`), {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/studios/${id}`, {
         method: "DELETE",
         credentials: "include",
+        headers: sessionToken
+          ? { Authorization: `Bearer ${sessionToken}` }
+          : undefined,
       });
       const data = await response.json();
 
