@@ -109,7 +109,7 @@ export default function MyListingsPage() {
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] bg-background px-4 py-12 sm:px-6 lg:px-8">
+    <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-center sm:justify-between">
           <div>

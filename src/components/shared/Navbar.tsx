@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import {
   Aperture,
   CalendarCheck,
+  Heart,
   ChevronDown,
   LayoutGrid,
   LogOut,
@@ -32,6 +33,7 @@ const MENU_ITEMS = [
   { href: "/add-studio", label: "Add New Studio", icon: PlusCircle },
   { href: "/my-listings", label: "My Studio Listings", icon: Store },
   { href: "/my-bookings", label: "My Bookings", icon: CalendarCheck },
+  { href: "/wishlist", label: "My Wishlist", icon: Heart },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -153,7 +155,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
               <span className="block text-lg font-extrabold tracking-tight text-foreground">
                 Studio<span className="text-amber-400">Space</span>
               </span>
-              <span className="hidden text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:block">
+              <span className="hidden text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground sm:block">
                 Production Network
               </span>
             </span>
@@ -292,7 +294,7 @@ function NavbarContent({ pathname }: { pathname: string }) {
 
         {/* Mobile panel */}
         {mobileOpen && (
-          <div className="border-t border-border bg-background px-4 pb-5 pt-3 lg:hidden">
+          <div className="max-h-[calc(100vh-5rem)] overflow-y-auto border-t border-border bg-background px-4 pb-5 pt-3 lg:hidden">
             <nav aria-label="Mobile" className="flex flex-col gap-1">
               {NAV_LINKS.map((l) => {
                 const active = isActive(pathname, l.href);

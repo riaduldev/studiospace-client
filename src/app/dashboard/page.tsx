@@ -16,6 +16,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Settings,
+  Heart,
 } from "lucide-react";
 import { toast } from "sonner";
 import { buttonVariants } from "@/components/ui/button";
@@ -172,7 +173,7 @@ export default function DashboardPage() {
   return (
     <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-background px-4 py-10 text-foreground sm:px-6 lg:px-8">
       {/* Ambient Studio Spotlight */}
-      <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[800px] -translate-x-1/2 rounded-full bg-amber-500/[0.07] blur-[140px]" />
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[min(800px,90vw)] -translate-x-1/2 rounded-full bg-amber-500/[0.07] blur-[140px]" />
 
       <div className="relative z-10 mx-auto max-w-7xl space-y-10">
         
@@ -200,7 +201,19 @@ export default function DashboardPage() {
                   "h-11 w-full justify-center rounded-xl border-border bg-muted/60 text-xs font-semibold text-foreground hover:bg-muted sm:w-auto",
               })}
             >
-              <Settings className="mr-2 h-4 w-4 text-muted-foreground" /> Manage Listings
+              <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
+              Manage Listings
+            </Link>
+            <Link
+              href="/wishlist"
+              className={buttonVariants({
+                variant: "outline",
+                className:
+                  "h-11 w-full justify-center rounded-xl border-border bg-muted/60 text-xs font-semibold text-foreground hover:bg-muted sm:w-auto",
+              })}
+            >
+              <Heart className="mr-2 h-4 w-4 text-muted-foreground" />
+              My Wishlist
             </Link>
             <Link
               href="/add-studio"
@@ -309,7 +322,7 @@ export default function DashboardPage() {
                         <div className="flex flex-wrap items-center gap-2">
                           <h3 className="max-w-full truncate text-sm font-semibold text-foreground">{booking.studioTitle}</h3>
                           <span
-                            className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase ${getStatusBadge(
+                            className={`shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-semibold uppercase ${getStatusBadge(
                               booking.status
                             )}`}
                           >
@@ -330,7 +343,7 @@ export default function DashboardPage() {
 
                       <div className="shrink-0 text-right">
                         <p className="text-sm font-bold text-foreground">${booking.totalPrice}</p>
-                        <span className="text-[10px] text-muted-foreground">#{booking._id.slice(-5)}</span>
+                        <span className="text-[11px] text-muted-foreground">#{booking._id.slice(-5)}</span>
                       </div>
                     </div>
                   ))}
@@ -377,7 +390,7 @@ export default function DashboardPage() {
                         className="h-14 w-16 rounded-xl object-cover bg-muted shrink-0"
                       />
                       <div className="min-w-0 flex-1">
-                        <span className="text-[10px] font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                        <span className="text-[11px] font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
                           {studio.category}
                         </span>
                         <h4 className="truncate text-sm font-bold text-foreground">{studio.title}</h4>

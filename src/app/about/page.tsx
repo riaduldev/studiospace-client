@@ -16,7 +16,7 @@ export default function AboutUsPage() {
   return (
     <div className="relative min-h-screen overflow-x-clip bg-background text-foreground selection:bg-amber-400 selection:text-zinc-950">
       {/* Ambient Spotlight Glow */}
-      <div className="pointer-events-none absolute left-1/2 top-0 h-[480px] w-[860px] -translate-x-1/2 rounded-full bg-amber-500/[0.08] blur-[140px]" />
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[480px] w-[min(860px,90vw)] -translate-x-1/2 rounded-full bg-amber-500/[0.08] blur-[140px]" />
 
       {/* 1. HERO SECTION */}
       <section className="relative z-10 mx-auto max-w-6xl px-4 pb-16 pt-20 text-center sm:px-6 lg:px-8">

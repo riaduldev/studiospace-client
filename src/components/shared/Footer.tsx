@@ -87,7 +87,7 @@ function StudioApertureLogo() {
             Space
           </span>
         </div>
-        <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground transition-colors group-hover:text-foreground">
+        <span className="text-[11px] font-medium uppercase tracking-[0.2em] text-muted-foreground transition-colors group-hover:text-foreground">
           Creative Stages
         </span>
       </div>
@@ -126,7 +126,7 @@ export function Footer() {
     <footer className="relative overflow-hidden border-t border-border bg-background text-muted-foreground">
       {/* Top Specular Amber Hairline & Ambient Glow */}
       <div className="pointer-events-none absolute inset-x-1/4 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-amber-400/60 to-transparent" />
-      <div className="pointer-events-none absolute -top-32 left-1/2 h-64 w-[680px] -translate-x-1/2 rounded-full bg-amber-500/[0.06] blur-[120px]" />
+      <div className="pointer-events-none absolute -top-32 left-1/2 h-64 w-[min(680px,90vw)] -translate-x-1/2 rounded-full bg-amber-500/[0.06] blur-[120px]" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 pb-10 pt-16 sm:px-8">
         {/* Main 12-Column Footer Grid */}
@@ -236,7 +236,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="group inline-flex items-center text-sm text-muted-foreground transition-colors hover:text-amber-700 dark:hover:text-amber-300"
+                    className="group inline-flex min-h-[44px] items-center text-sm text-muted-foreground transition-colors hover:text-amber-700 dark:hover:text-amber-300"
                   >
                     <span className="mr-0 h-1 w-0 rounded-full bg-amber-400 transition-all duration-300 group-hover:mr-2 group-hover:w-2" />
                     {link.label}
@@ -256,7 +256,7 @@ export function Footer() {
                 <li key={category.label}>
                   <Link
                     href={category.href}
-                    className="group flex items-center justify-between rounded-lg py-0.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="group flex min-h-[44px] items-center justify-between rounded-lg py-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
                     <span className="transition-colors group-hover:text-amber-700 dark:group-hover:text-amber-300">
                       {category.label}
@@ -273,7 +273,7 @@ export function Footer() {
           {/* Column 4: Stage Dispatch Newsletter Card (3 cols) */}
           <div className="lg:col-span-3">
             <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-b from-muted/60 to-muted/20 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/25 bg-amber-400/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-300">
                 <Sparkles className="h-3 w-3" />
                 Stage Dispatch
               </div>
@@ -304,7 +304,7 @@ export function Footer() {
                 <Button
                   type="submit"
                   disabled={isSubscribing}
-                  className="group h-10 w-full rounded-xl bg-gradient-to-b from-amber-300 via-amber-400 to-amber-500 text-xs font-semibold text-zinc-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_4px_16px_rgba(245,158,11,0.28)] transition-all hover:brightness-105"
+                  className="group h-11 w-full rounded-xl bg-gradient-to-b from-amber-300 via-amber-400 to-amber-500 text-xs font-semibold text-zinc-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_4px_16px_rgba(245,158,11,0.28)] transition-all hover:brightness-105"
                 >
                   {isSubscribing ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -337,7 +337,7 @@ export function Footer() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="transition-colors hover:text-foreground"
+                className="inline-flex min-h-[44px] items-center transition-colors hover:text-foreground"
               >
                 {item.label}
               </Link>

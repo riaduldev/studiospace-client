@@ -2,11 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Calendar, MapPin, XCircle, ArrowRight, Search, Loader2 } from "lucide-react";
+import { Calendar, MapPin, XCircle, ArrowRight, Search, Loader2, Download } from "lucide-react";
 import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { BrandedLoader } from "@/components/shared/loading-state";
+import { generateBookingInvoice } from "@/lib/invoice";
 
 interface Booking {
   _id: string;
@@ -15,6 +16,11 @@ interface Booking {
   bookingDate: string;
   totalPrice: number;
   status: "Pending" | "Confirmed" | "Completed" | "Cancelled";
+  sessionHours?: number;
+  hourlyRate?: number;
+  securityDeposit?: number;
+  userName?: string;
+  userEmail?: string;
 }
 
 export default function MyBookingsPage() {
@@ -194,20 +200,38 @@ export default function MyBookingsPage() {
                     <p className="text-lg font-bold text-foreground">${booking.totalPrice}</p>
                   </div>
 
-                  {booking.status === "Pending" && (
-                    <Button
-                      onClick={() => handleCancelBooking(booking._id)}
-                      disabled={cancellingBookingId !== null}
-                      className="mt-2 rounded-xl bg-rose-500/10 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-500/20"
-                    >
-                      {cancellingBookingId === booking._id ? (
-                        <Loader2 className="mr-1.5 size-3.5 animate-spin" />
-                      ) : (
-                        <XCircle className="mr-1.5 h-3.5 w-3.5" />
-                      )}
-                      Cancel Booking
-                    </Button>
-                  )}
+                  <div className="mt-2 flex flex-wrap items-center gap-2 sm:mt-0">
+                    {booking.status === "Confirmed" && (
+                      <Button
+                        type="button"
+                        onClick={() =>
+                          generateBookingInvoice(booking, {
+                            name: session?.user?.name || booking.userName,
+                            email: session?.user?.email || booking.userEmail,
+                          })
+                        }
+                        className="h-10 rounded-xl bg-amber-400 px-4 text-xs font-semibold text-zinc-950 hover:bg-amber-300"
+                      >
+                        <Download className="mr-1.5 h-3.5 w-3.5" />
+                        Download Invoice
+                      </Button>
+                    )}
+
+                    {booking.status === "Pending" && (
+                      <Button
+                        onClick={() => handleCancelBooking(booking._id)}
+                        disabled={cancellingBookingId !== null}
+                        className="h-10 rounded-xl bg-rose-500/10 px-4 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-500/20"
+                      >
+                        {cancellingBookingId === booking._id ? (
+                          <Loader2 className="mr-1.5 size-3.5 animate-spin" />
+                        ) : (
+                          <XCircle className="mr-1.5 h-3.5 w-3.5" />
+                        )}
+                        Cancel Booking
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

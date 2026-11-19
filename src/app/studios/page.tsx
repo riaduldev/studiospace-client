@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { StudioCardSkeletonGrid } from "@/components/shared/loading-state";
+import { authClient } from "@/lib/auth-client";
+import { FavoriteButton } from "@/components/shared/FavoriteButton";
 
 interface Studio {
   _id: string;
@@ -40,9 +42,13 @@ export default function StudiosPage() {
 function StudiosExplorer() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+  const sessionToken = session?.session?.token;
   const [studios, setStudios] = useState<Studio[]>([]);
   const [loadedQuery, setLoadedQuery] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
   const selectedCategory = searchParams.get("category") || "all";
 
   function updateCategory(category: string) {
@@ -64,6 +70,25 @@ function StudiosExplorer() {
   if (search) queryParams.append("search", search);
   const queryString = queryParams.toString();
   const loading = loadedQuery !== queryString;
+
+  useEffect(() => {
+    if (!user?.email) {
+      const timer = setTimeout(() => setFavoriteIds(new Set()), 0);
+      return () => clearTimeout(timer);
+    }
+    const controller = new AbortController();
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/favorites/ids`, {
+      credentials: "include",
+      headers: sessionToken ? { Authorization: `Bearer ${sessionToken}` } : undefined,
+      signal: controller.signal,
+    })
+      .then((response) => response.json())
+      .then((ids) => {
+        if (Array.isArray(ids)) setFavoriteIds(new Set(ids));
+      })
+      .catch(() => {});
+    return () => controller.abort();
+  }, [user?.email, sessionToken]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -103,7 +128,7 @@ function StudiosExplorer() {
   return (
     <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-background px-4 py-12 sm:px-6 lg:px-8">
       {/* Ambient Spotlight */}
-      <div className="pointer-events-none absolute left-1/2 top-0 h-[380px] w-[700px] -translate-x-1/2 rounded-full bg-amber-500/[0.06] blur-[120px]" />
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[380px] w-[min(700px,90vw)] -translate-x-1/2 rounded-full bg-amber-500/[0.06] blur-[120px]" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* Header & Search */}
@@ -198,6 +223,20 @@ function StudiosExplorer() {
                   <span className="absolute left-3 top-3 rounded-full border border-white/20 bg-zinc-950/70 px-3 py-1 text-[11px] font-medium text-amber-300 backdrop-blur-md">
                     {studio.category}
                   </span>
+                  <div className="absolute right-3 top-3">
+                    <FavoriteButton
+                      studioId={studio._id}
+                      initialFavorited={favoriteIds.has(studio._id)}
+                      onChange={(id, next) => {
+                        setFavoriteIds((prev) => {
+                          const updated = new Set(prev);
+                          if (next) updated.add(id);
+                          else updated.delete(id);
+                          return updated;
+                        });
+                      }}
+                    />
+                  </div>
                 </div>
 
                 <div className="p-5">

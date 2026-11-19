@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { StudioCardSkeletonGrid } from "@/components/shared/loading-state";
+import { authClient } from "@/lib/auth-client";
+import { FavoriteButton } from "@/components/shared/FavoriteButton";
 
 interface Studio {
   _id: string;
@@ -64,8 +66,12 @@ const CATEGORIES = [
 
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+  const sessionToken = session?.session?.token;
   const [featuredStudios, setFeaturedStudios] = useState<Studio[]>([]);
   const [featuredLoaded, setFeaturedLoaded] = useState(false);
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
   const loading = !featuredLoaded;
 
   // Hero Slider Auto-play effect
@@ -108,6 +114,25 @@ export default function HomePage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!user?.email) {
+      const timer = setTimeout(() => setFavoriteIds(new Set()), 0);
+      return () => clearTimeout(timer);
+    }
+    const controller = new AbortController();
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/favorites/ids`, {
+      credentials: "include",
+      headers: sessionToken ? { Authorization: `Bearer ${sessionToken}` } : undefined,
+      signal: controller.signal,
+    })
+      .then((response) => response.json())
+      .then((ids) => {
+        if (Array.isArray(ids)) setFavoriteIds(new Set(ids));
+      })
+      .catch(() => {});
+    return () => controller.abort();
+  }, [user?.email, sessionToken]);
+
   return (
     <div className="min-h-screen overflow-x-clip bg-background text-foreground">
 
@@ -121,7 +146,7 @@ export default function HomePage() {
             }`}
           >
             <div className="absolute inset-0 bg-gradient-to-t from-[#09090B] via-zinc-950/60 to-zinc-950/40 z-10" />
-            <img src={slide.image} alt={slide.title} className="h-full w-full object-cover scale-105 animate-pulse duration-1000" />
+            <img src={slide.image} alt={slide.title} className="h-full w-full object-cover" />
 
             <div className="absolute inset-0 z-20 flex items-center justify-center px-4 text-center">
               <div className="max-w-4xl space-y-6">
@@ -164,11 +189,19 @@ export default function HomePage() {
         {/* Slider Dots */}
         <div className="absolute bottom-6 left-1/2 z-30 -translate-x-1/2 flex gap-2">
           {HERO_SLIDES.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentSlide(idx)}
-              className={`h-2 rounded-full transition-all ${idx === currentSlide ? "w-8 bg-amber-400" : "w-2 bg-white/40"}`}
-            />
+              <button
+                key={idx}
+                type="button"
+                aria-label={`Go to slide ${idx + 1}`}
+                onClick={() => setCurrentSlide(idx)}
+                className="grid h-8 w-8 place-items-center rounded-full"
+              >
+                <span
+                  className={`block h-2 rounded-full transition-all ${
+                    idx === currentSlide ? "w-8 bg-amber-400" : "w-2 bg-white/40"
+                  }`}
+                />
+              </button>
           ))}
         </div>
       </section>
@@ -180,7 +213,7 @@ export default function HomePage() {
             <span className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">Curated Spaces</span>
             <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl text-foreground">Browse by Category</h2>
           </div>
-          <Link href="/studios" className="mt-4 md:mt-0 flex items-center gap-1.5 text-sm font-semibold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300">
+          <Link href="/studios" className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 md:mt-0">
             View All Categories <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -257,6 +290,20 @@ export default function HomePage() {
                     <span className="absolute left-3 top-3 rounded-full border border-white/20 bg-zinc-950/75 px-3 py-1 text-[11px] font-medium text-amber-300 backdrop-blur-md">
                       {studio.category}
                     </span>
+                    <div className="absolute right-3 top-3">
+                      <FavoriteButton
+                        studioId={studio._id}
+                        initialFavorited={favoriteIds.has(studio._id)}
+                        onChange={(id, next) => {
+                          setFavoriteIds((prev) => {
+                            const updated = new Set(prev);
+                            if (next) updated.add(id);
+                            else updated.delete(id);
+                            return updated;
+                          });
+                        }}
+                      />
+                    </div>
                   </div>
 
                   <div className="p-5">

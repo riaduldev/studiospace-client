@@ -296,7 +296,7 @@ export default function EditStudioPage({ params }: { params: Promise<{ id: strin
   return (
     <div className="relative min-h-[calc(100vh-5rem)] overflow-x-clip bg-background px-4 py-12 sm:px-6 lg:px-8">
       {/* Ambient Spotlight Glow */}
-      <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[760px] -translate-x-1/2 rounded-full bg-amber-500/[0.08] blur-[130px]" />
+      <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[min(760px,90vw)] -translate-x-1/2 rounded-full bg-amber-500/[0.08] blur-[130px]" />
 
       <div className="relative z-10 mx-auto max-w-4xl rounded-3xl border border-border bg-card p-6 shadow-2xl backdrop-blur-2xl sm:p-10">
         

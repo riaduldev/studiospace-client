@@ -213,7 +213,7 @@ export default function RegisterPage() {
             <div className="relative">
               <Lock className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input id="register-password" name="password" type={showPassword ? "text" : "password"} autoComplete="new-password" required placeholder="Secure password" value={formData.password} onChange={handleChange} className="h-11 rounded-xl bg-muted/60 pl-10 pr-10 text-sm text-foreground" />
-              <button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+              <button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-muted-foreground hover:bg-muted">
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
@@ -234,7 +234,7 @@ export default function RegisterPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          Already have an account? <Link href="/login" className="text-amber-600 dark:text-amber-400 underline">Login here</Link>
+          Already have an account? <Link href="/login" className="inline-flex min-h-[44px] items-center text-amber-600 dark:text-amber-400 underline">Login here</Link>
         </p>
       </div>
     </div>
