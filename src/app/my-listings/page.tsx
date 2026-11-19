@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Building2, Trash2, Edit, Plus, MapPin, Loader2, TriangleAlert } from "lucide-react";
 import { toast } from "sonner";
