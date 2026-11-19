@@ -428,7 +428,7 @@ export default function AddStudioPage() {
                 )}
               </div>
 
-              {/* সরাসরি ইমেজ লিংক বসানোর অপশন */}
+            
               <div className="space-y-1 pt-1">
                 <Label htmlFor="imageUrlInput" className="text-[11px] text-muted-foreground">
                   Cover image URL (required):
