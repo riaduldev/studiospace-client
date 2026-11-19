@@ -2,15 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  Building2,
-  Trash2,
-  Edit,
-  Plus,
-  MapPin,
-  Loader2,
-  TriangleAlert,
-} from "lucide-react";
+import { Building2, Trash2, Edit, Plus, MapPin, Loader2, TriangleAlert } from "lucide-react";
 import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -36,8 +28,7 @@ interface Studio {
 }
 
 export default function MyListingsPage() {
-  const { data: session, isPending: isSessionPending } =
-    authClient.useSession();
+  const { data: session, isPending: isSessionPending } = authClient.useSession();
   const userEmail = session?.user?.email;
   const sessionToken = session?.session?.token;
 
@@ -60,7 +51,7 @@ export default function MyListingsPage() {
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/my-studios`,
-          { signal: controller.signal, credentials: "include", headers },
+          { signal: controller.signal, credentials: "include", headers }
         );
         const data = await response.json();
 
@@ -72,9 +63,7 @@ export default function MyListingsPage() {
       } catch (error) {
         if (active && !controller.signal.aborted) {
           const message =
-            error instanceof Error
-              ? error.message
-              : "Failed to fetch your listings.";
+            error instanceof Error ? error.message : "Failed to fetch your listings.";
           toast.error(message);
         }
       } finally {
@@ -94,16 +83,13 @@ export default function MyListingsPage() {
 
     try {
       setDeletingStudioId(id);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/studios/${id}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-          headers: sessionToken
-            ? { Authorization: `Bearer ${sessionToken}` }
-            : undefined,
-        },
-      );
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/studios/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: sessionToken
+          ? { Authorization: `Bearer ${sessionToken}` }
+          : undefined,
+      });
       const data = await response.json();
 
       if (!response.ok || !data.success) {
@@ -114,9 +100,7 @@ export default function MyListingsPage() {
       setStudios((prev) => prev.filter((studio) => studio._id !== id));
     } catch (error) {
       const message =
-        error instanceof Error
-          ? error.message
-          : "Server error during deletion.";
+        error instanceof Error ? error.message : "Server error during deletion.";
       toast.error(message);
     } finally {
       setDeletingStudioId(null);
@@ -129,12 +113,8 @@ export default function MyListingsPage() {
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-foreground">
-              My Studio Listings
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Manage, update, or remove your published creative spaces.
-            </p>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">My Studio Listings</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Manage, update, or remove your published creative spaces.</p>
           </div>
           <Link
             href="/add-studio"
@@ -154,14 +134,11 @@ export default function MyListingsPage() {
           />
         ) : !userEmail ? (
           <div className="mt-20 text-center">
-            <p className="text-lg font-medium text-muted-foreground">
-              Log in to manage your studio listings.
-            </p>
+            <p className="text-lg font-medium text-muted-foreground">Log in to manage your studio listings.</p>
             <Link
               href="/login"
               className={buttonVariants({
-                className:
-                  "mt-4 rounded-xl bg-amber-400 font-semibold text-zinc-950",
+                className: "mt-4 rounded-xl bg-amber-400 font-semibold text-zinc-950",
               })}
             >
               Log in
@@ -170,14 +147,11 @@ export default function MyListingsPage() {
         ) : studios.length === 0 ? (
           <div className="mt-20 text-center">
             <Building2 className="mx-auto h-12 w-12 text-muted-foreground" />
-            <p className="mt-4 text-lg font-medium text-muted-foreground">
-              You haven&apos;t listed any studios yet.
-            </p>
+            <p className="mt-4 text-lg font-medium text-muted-foreground">You haven&apos;t listed any studios yet.</p>
             <Link
               href="/add-studio"
               className={buttonVariants({
-                className:
-                  "mt-4 rounded-xl bg-amber-400 font-semibold text-zinc-950",
+                className: "mt-4 rounded-xl bg-amber-400 font-semibold text-zinc-950",
               })}
             >
               Create Your First Listing
@@ -186,31 +160,18 @@ export default function MyListingsPage() {
         ) : (
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {studios.map((studio) => (
-              <div
-                key={studio._id}
-                className="overflow-hidden rounded-2xl border border-border bg-card p-4"
-              >
+              <div key={studio._id} className="overflow-hidden rounded-2xl border border-border bg-card p-4">
                 <div className="relative h-40 w-full overflow-hidden rounded-xl bg-muted">
-                  <img
-                    src={studio.imageUrl}
-                    alt={studio.title}
-                    className="h-full w-full object-cover"
-                  />
+                  <img src={studio.imageUrl} alt={studio.title} className="h-full w-full object-cover" />
                 </div>
                 <div className="mt-4">
-                  <span className="text-[11px] font-medium uppercase tracking-wider text-amber-600 dark:text-amber-400">
-                    {studio.category}
-                  </span>
-                  <h3 className="mt-1 text-base font-bold text-foreground truncate">
-                    {studio.title}
-                  </h3>
+                  <span className="text-[11px] font-medium uppercase tracking-wider text-amber-600 dark:text-amber-400">{studio.category}</span>
+                  <h3 className="mt-1 text-base font-bold text-foreground truncate">{studio.title}</h3>
                   <p className="mt-1 flex min-w-0 items-center gap-1 text-xs text-muted-foreground">
                     <MapPin className="h-3 w-3 shrink-0" />
                     <span className="truncate">{studio.location}</span>
                   </p>
-                  <p className="mt-2 text-sm font-semibold text-foreground">
-                    ${studio.hourlyRate}/hr
-                  </p>
+                  <p className="mt-2 text-sm font-semibold text-foreground">${studio.hourlyRate}/hr</p>
                 </div>
 
                 <div className="mt-5 flex items-center gap-2 border-t border-border pt-4">
@@ -222,8 +183,7 @@ export default function MyListingsPage() {
                         "flex-1 rounded-xl border-border bg-muted/60 text-xs text-foreground hover:bg-muted",
                     })}
                   >
-                    <Edit className="mr-1.5 h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />{" "}
-                    Update
+                    <Edit className="mr-1.5 h-3.5 w-3.5 text-amber-600 dark:text-amber-400" /> Update
                   </Link>
                   <Button
                     onClick={() => setStudioToDelete(studio)}
@@ -249,9 +209,7 @@ export default function MyListingsPage() {
             <AlertDialogMedia className="bg-rose-500/10 text-rose-600 dark:text-rose-400">
               <TriangleAlert aria-hidden="true" />
             </AlertDialogMedia>
-            <AlertDialogTitle className="text-foreground">
-              Delete studio listing?
-            </AlertDialogTitle>
+            <AlertDialogTitle className="text-foreground">Delete studio listing?</AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground">
               {studioToDelete
                 ? `“${studioToDelete.title}” will be permanently removed. This action cannot be undone.`
