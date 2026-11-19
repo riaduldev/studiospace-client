@@ -1,108 +1,74 @@
-# StudioSpace
+# StudioSpace — Creative Studio Discovery & Booking Platform
 
-A full-stack studio discovery and booking platform. Creators find and reserve professional soundstages, cyclorama lofts, podcast rooms, and recording suites; hosts list and manage their spaces. Built with **Next.js 16** (App Router) on the frontend and an **Express + MongoDB** API on the backend, with **Better Auth** for authentication.
+**Live site (client):** https://studiospace-client-eta.vercel.app
 
-## Live
+StudioSpace connects creators (filmmakers, photographers, podcasters, musicians) with verified professional soundstages, cyclorama lofts, podcast rooms, and recording suites. Hosts list their spaces; creators search, book, and manage reservations — all from one modern, responsive web app.
 
-- Client: https://studiospace-client-eta.vercel.app
-- API: https://studiospace-server-bgs9.onrender.com
+## ✨ Key Features
 
-## Tech stack
+- 🔍 **Discover & filter studios** by category, location, and keyword with instant search.
+- 📅 **4-hour session booking** with transparent hourly rates and refundable security deposits.
+- ❤️ **Saved Studios wishlist** — heart any studio to save it for later (per-user, MongoDB-backed).
+- 📄 **Downloadable PDF invoices** for confirmed bookings, generated client-side with full booking details.
+- 📊 **Creator & host dashboards** to manage listings, bookings, cancellations, and earnings.
+- 🌗 **Light/dark theme**, fully responsive across mobile, tablet, and desktop (320px → 1440px).
+- 🔐 **Secure authentication** via Better Auth (email/password + Google OAuth) with cross-origin Bearer sessions.
 
-**Client** (`studiospace-client`)
-- Next.js 16.4.6 (App Router, React 19.3, React Compiler enabled)
-- Tailwind CSS v4 (via `@tailwindcss/turbopack`, no PostCSS config)
+## 🛠 Tech Stack
+
+**Frontend (this repo — `studiospace-client`)**
+- Next.js 16.4.6 (App Router, React 19.3, React Compiler)
+- TypeScript, Tailwind CSS v4
 - shadcn/ui (`base-nova`, built on `@base-ui/react`)
 - Better Auth (MongoDB adapter) + `bearer()` plugin
-- Sonner toasts, `cn` package, `next-themes`
+- jsPDF (invoice generation), Sonner (toasts)
 
-**Server** (`studiospace-server`)
-- Express 5, MongoDB (Atlas), Multer (10 MB limit)
+**Backend (`studiospace-server`)**
+- Node.js ≥ 20, Express 5
+- MongoDB (Atlas)
 - Better Auth session validation via `/api/auth/get-session`
-- ImgBB for image uploads
+- Multer (10 MB) + ImgBB for image uploads
 
-## Repository layout
+## 🚀 Local Setup
 
-```
-studio-space/
-├── studiospace-client/   # Next.js app (this repo)
-└── studiospace-server/   # Express API (separate repo/deployment)
-```
-
-## Prerequisites
-
-- Node.js >= 20
-- npm (lockfile: `package-lock.json`)
-- A MongoDB instance (Atlas or local)
-- Google OAuth credentials (optional, for Google sign-in)
-- An ImgBB API key (for image uploads)
-
-## Environment variables
-
-### Client (`studiospace-client/.env.local`)
-
-```env
-BETTER_AUTH_URL=http://localhost:3000
-BETTER_AUTH_SECRET=replace-with-a-long-random-secret
-MONGODB_URI=mongodb://...
-GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
-
-`NEXT_PUBLIC_API_URL` is inlined into the client bundle at **build time**, so it must be an absolute origin the browser can reach. Use `http://localhost:8000` locally and the Render URL in production.
-
-### Server (`studiospace-server/.env`)
-
-```env
-PORT=8000
-NODE_ENV=development
-MONGODB_URI=mongodb://...
-BETTER_AUTH_URL=http://localhost:3000
-CLIENT_ORIGINS=http://localhost:3000
-IMGBB_API_KEY=...
-```
-
-`BETTER_AUTH_URL` must point at the deployed client origin in production so the API can verify sessions.
-
-## Getting started
-
+### 1. Start the API server
 ```bash
-# 1. Start the API
 cd ../studiospace-server
 npm install
+# create .env with PORT, MONGODB_URI, BETTER_AUTH_URL, CLIENT_ORIGINS, IMGBB_API_KEY
 npm start          # or: npm run dev
+```
+The API runs on `http://localhost:8000`.
 
-# 2. Start the client
+### 2. Start the client
+```bash
 cd ../studiospace-client
 npm install
+# create .env.local with BETTER_AUTH_URL, MONGODB_URI, BETTER_AUTH_SECRET,
+# GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXT_PUBLIC_API_URL=http://localhost:8000
 npm run dev
 ```
-
 Open http://localhost:3000.
 
-## Scripts
+### 3. Verify
+```bash
+npm run lint        # 0 errors (pre-existing <img> warnings only)
+npx tsc --noEmit    # type check
+npm run build       # production build
+```
 
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Dev server (regenerates the Next.js agent block) |
-| `npm run build` | Production build + type check |
-| `npm run lint` | ESLint (0 errors expected; `<img>` warnings are pre-existing) |
-| `npx tsc --noEmit` | Standalone TypeScript check |
+> Both servers must run together — the client fetches all studio/booking data from the API on port 8000.
 
-Verification order: `lint` → `tsc --noEmit` → `build`.
+## 🔑 Examiner Test Credentials
 
-## Architecture notes
+Use these to log in and explore the app:
 
-- Studio/booking data come from the external API, not Next.js route handlers. Every fetch builds its URL inline from `process.env.NEXT_PUBLIC_API_URL`.
-- Auth-protected calls send `Authorization: Bearer <session token>` (from `session.session.token`) **plus** `credentials: "include"`. Session cookies are host-scoped and cannot cross from the Vercel domain to the Render domain, so the Bearer header is what authenticates cross-origin requests.
-- The API validates sessions by forwarding `authorization` (and `cookie`) to Better Auth's `/api/auth/get-session`; the `bearer()` plugin converts the token back into a session.
-- Ownership and booking identity are derived server-side from the session. Never send or trust email path params.
-- Booking creation sends only `studioId` + `bookingDate`; the API derives studio title/location and the four-hour total, and rejects a second active (Pending/Confirmed) booking per studio per user.
-- Dynamic route pages receive `params` as a Promise — follow the existing `use(params)` pattern.
-- `Navbar` remounts its stateful content via `key={pathname}`; keep that instead of reset effects.
+- **Email:** `examiner@studiospace.test`
+- **Password:** `Examiner123`
 
-## API route contract
+This account can browse studios, save favorites to the wishlist, create bookings, view the My Bookings page, and download PDF invoices for confirmed bookings.
+
+## 📡 API Route Contract
 
 Public:
 - `GET /api/studios`, `GET /api/studios/:id`
@@ -112,17 +78,21 @@ Authenticated (Bearer token required):
 - `POST /api/studios`, `PATCH /api/studios/:id`, `DELETE /api/studios/:id`
 - `GET /api/bookings`, `POST /api/bookings`, `PATCH /api/bookings/:id/cancel`
 - `POST /api/upload`
+- `GET /api/favorites`, `GET /api/favorites/ids`, `POST /api/favorites/:studioId`, `DELETE /api/favorites/:studioId`
 
-## Deployment
+## 🌐 Deployment
 
-- **Client (Vercel):** set `NEXT_PUBLIC_API_URL=https://studiospace-server-bgs9.onrender.com` (and the auth secrets) **before** building, because it is inlined into the bundle. Redeploy after changing it.
-- **API (Render):** set `BETTER_AUTH_URL` to the deployed client origin and `CLIENT_ORIGINS` to include it. CORS must allow the client origin or every browser fetch fails.
-- Production URLs: client `https://studiospace-client-eta.vercel.app`, API `https://studiospace-server-bgs9.onrender.com`.
+- Client (Vercel): https://studiospace-client-eta.vercel.app
+- API (Render): https://studiospace-server-bgs9.onrender.com
 
-## Responsive design
+Set `NEXT_PUBLIC_API_URL=https://studiospace-server-bgs9.onrender.com` on Vercel **before** building (it is inlined into the bundle).
 
-Audited across 320–1440 px. Layouts use Tailwind responsive prefixes (`sm:`, `md:`, `lg:`) with mobile-first grids that collapse to a single column on phones. Tap targets are at least 44 px, ambient glows are clamped to the viewport, and no horizontal scroll occurs on any page.
+## 📱 Responsive Design
+
+Audited across 320px–1440px. Mobile-first grids collapse to a single column on phones; tap targets are ≥44px; no horizontal scroll on any page.
 
 ## License
 
 Private project. All rights reserved.
+EOF
+echo "README updated"; wc -l README.md
